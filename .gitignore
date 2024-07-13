@@ -4,6 +4,7 @@
 # Log file
 *.log
 
+
 # BlueJ files
 *.ctxt
 
@@ -23,3 +24,7 @@
 hs_err_pid*
 replay_pid*
 /bin/
+
+# Project
+.project
+.classpath
