@@ -2,6 +2,7 @@ package model.entities;
 
 public class Account {
 	private Integer numberAccount;
+	private Integer passwordAccount;
 	private Double balance;
 	private Client client;
 	
@@ -9,16 +10,21 @@ public class Account {
 	public Account() {
 	}
 
-	public Account(Integer numberAccount, Double balance, Client client) {
+	public Account(Integer numberAccount, Integer passwordAccount, Double balance, Client client) {
 		this.client = client;
 		this.numberAccount = numberAccount;
+		this.passwordAccount = passwordAccount;
 		this.balance = balance;
 	}
 
 	public Integer getNumberAccount() {
 		return numberAccount;
 	}
-
+	
+	public Integer getPasswordAccount() {
+		return passwordAccount;
+	}
+	
 	public Double getBalance() {
 		return balance;
 	}
@@ -39,6 +45,7 @@ public class Account {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Number accoount: " + getNumberAccount() + "\n");
+		sb.append("password: " + getPasswordAccount() + "\n");
 		sb.append("Balance: " + getBalance() + "\n");
 		sb.append("Client: " + getClient() + "\n");
 		return sb.toString();
