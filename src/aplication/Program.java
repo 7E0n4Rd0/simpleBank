@@ -24,14 +24,22 @@ public class Program {
 		
 		System.out.println(agency +"\n"+ acc);
 		*/
-		System.out.print("CPF: ");
-		String cpf = input.nextLine();
-		cpf = DataFormatter.formatCPF(cpf);
+		/*System.out.print("CPF: ");
+		String cpf = input.nextLine(); //CPF validator is almost completed
 		System.out.println(cpf);
-		DataValidator.validateCPF(cpf);
+		DataValidator.validateCPF(cpf);*/
+		
+		/*System.out.print("Phone Number: ");
+		String phoneNumber = input.nextLine();
+		phoneNumber = DataFormatter.formatPhoneNumber(phoneNumber);
+		System.out.println(phoneNumber);
+		DataValidator.validatePhoneNumber(phoneNumber);*/
 		
 		
-		
+		System.out.print("Name: ");
+		String name = input.nextLine();
+		name = DataFormatter.formatClientName(name);
+		System.out.println(name);
 	}
 
 }

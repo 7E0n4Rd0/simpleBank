@@ -3,12 +3,12 @@ package model.entities;
 public class Client {
 	private String cpfClient;
 	private String nameClient;
-	private Integer phoneNumberClient;
+	private String phoneNumberClient;
 	
 	public Client() {
 	}
 
-	public Client(String cpfClient, String nameClient, Integer phoneNumberClient) {
+	public Client(String cpfClient, String nameClient, String phoneNumberClient) {
 		this.cpfClient = cpfClient;
 		this.nameClient = nameClient;
 		this.phoneNumberClient = phoneNumberClient;
@@ -22,11 +22,11 @@ public class Client {
 		this.nameClient = nameClient;
 	}
 
-	public Integer getPhoneNumberClient() {
+	public String getPhoneNumberClient() {
 		return phoneNumberClient;
 	}
 
-	public void setPhoneNumberClient(Integer phoneNumberClient) {
+	public void setPhoneNumberClient(String phoneNumberClient) {
 		this.phoneNumberClient = phoneNumberClient;
 	}
 
