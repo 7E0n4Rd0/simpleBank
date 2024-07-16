@@ -50,6 +50,10 @@ public class Agency {
 		accounts.remove(account);
 	}
 	
+	public List<Account> getAccountsList(){
+		return accounts;
+	}
+	
 	@Override
 	public String toString() {
 		return "Bank name: " + getBankName() + 
