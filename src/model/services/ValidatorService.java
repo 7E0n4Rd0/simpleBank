@@ -27,7 +27,7 @@ public abstract class ValidatorService {
 	}
 	
 	public static void validateName(String name) {
-		if(!name.matches("\\w{3,}")) {
+		if(!name.matches("\\w{3,}[\\s]?\\w*")) {
 			System.out.println("Invalid Name");
 		}
 	}
@@ -37,4 +37,6 @@ public abstract class ValidatorService {
 			System.out.println("This number is invalid");
 	 	}
 	}
+	
+	
 }

@@ -10,11 +10,11 @@ public class Account {
 	public Account() {
 	}
 
-	public Account(Integer numberAccount, Integer passwordAccount, Double balance, Client client) {
+	public Account(Integer numberAccount, Integer passwordAccount, Client client) {
 		this.client = client;
 		this.numberAccount = numberAccount;
 		this.passwordAccount = passwordAccount;
-		this.balance = balance;
+		this.balance = 0.0;
 	}
 
 	public Integer getNumberAccount() {

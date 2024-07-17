@@ -1,6 +1,7 @@
 package aplication;
 
 
+import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
@@ -16,33 +17,26 @@ public class Program {
 	public static void main(String[] args) {
 		
 		Scanner input = new Scanner(System.in);
+		Random random = new Random();
+		System.out.println("Agency Data");
+		System.out.print("Bank name: ");
+		String bankName = FormatterService.formatName(input.nextLine());
+		System.out.print("Agency address: ");
+		String agencyAddress = input.nextLine();
+		int agencyCode = random.nextInt(000, 999);
 		
+		Agency agency = new Agency(agencyCode, bankName, agencyAddress);
+		System.out.println(agency);
 		
-		Agency agency = new Agency(102, "Linkin Park", "Street 342");
-		Client client = new Client("10909878712", "Arthur", "3199098763");
-		Account acc = new Account(1004, 1234, 0.0, client);
-		agency.addAccount(acc);
-		agency.addAccount(new Account(1023, 3214, 0.0, new Client("32165498745", "Steve Rogers", "1123456987")));
-		System.out.println(agency +"\n"+ acc);
+		System.out.println("Client Data");
+		System.out.print("Client name: ");
+		String clientName = FormatterService.formatName(input.nextLine());
+		System.out.print("Client CPF: ");
+		String clientCPF = FormatterService.formatCPF(input.nextLine());
+		System.out.print("Client Phone Number: ");
+		String clientPhoneNumber = FormatterService.formatPhoneNumber(input.nextLine());
 		
-		/*System.out.print("CPF: ");
-		String cpf = input.nextLine(); //CPF validator is almost completed
-		System.out.println(cpf);
-		ValidatorService.validateCPF(cpf);
-		
-		System.out.print("Phone Number: ");
-		String phoneNumber = input.nextLine();
-		phoneNumber = FormatterService.formatPhoneNumber(phoneNumber);
-		System.out.println(phoneNumber);
-		ValidatorService.validatePhoneNumber(phoneNumber);
-		
-		
-		System.out.print("Name: ");
-		String name = input.nextLine();
-		name = FormatterService.formatClientName(name);
-		System.out.println(name);*/
-
-		ValidatorService.validateAccount(agency, 1014, 12345);
+		System.out.println(new Client(clientCPF, clientName, clientPhoneNumber));
 	}
-
+	
 }
