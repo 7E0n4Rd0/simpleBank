@@ -40,7 +40,9 @@ public class Account {
 	public void withdraw(Double amount) {
 		this.balance -= amount;
 	}
-	
+	public void checkBalance(Integer password) {
+		System.out.println("Your current is R$" + String.format("%.2f", getBalance()));
+	}
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
