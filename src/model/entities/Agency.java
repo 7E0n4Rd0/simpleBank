@@ -5,25 +5,15 @@ import java.util.List;
 
 public class Agency {
 	private Integer agencyCode;
-	private String bankName;
 	private String agencyAddress;
 	private List<Account> accounts = new ArrayList<>();
 	
 	public Agency() {
 	}
 
-	public Agency(Integer agencyCode, String bankName, String agencyAddress) {
+	public Agency(Integer agencyCode, String agencyAddress) {
 		this.agencyCode = agencyCode;
-		this.bankName = bankName;
 		this.agencyAddress = agencyAddress;
-	}
-
-	public String getBankName() {
-		return bankName;
-	}
-
-	public void setBankName(String bankName) {
-		this.bankName = bankName;
 	}
 
 	public String getAgencyAddress() {
@@ -38,9 +28,6 @@ public class Agency {
 		return agencyCode;
 	}
 	
-	public void setAgencyCode(Integer agencyCode) {
-		this.agencyCode = agencyCode;
-	}
 
 	public void addAccount(Account account) {
 		accounts.add(account);
@@ -56,8 +43,7 @@ public class Agency {
 	
 	@Override
 	public String toString() {
-		return "Bank name: " + getBankName() + 
-				" Agency code: " + getAgencyCode() + 
+		return " Agency code: " + String.format("%03d", getAgencyCode()) + 
 				" Agency address: " + getAgencyAddress();
 	}
 	

@@ -1,7 +1,7 @@
 package model.services;
 
 public abstract class FormatterService {
-	public static String formatCPF(String cpf) {
+	protected static String formatCPF(String cpf) {
 		cpf = cpf.trim();
 		ValidatorService.validateCPF(cpf);
 		StringBuilder sb = new StringBuilder();
@@ -11,7 +11,7 @@ public abstract class FormatterService {
 		return cpf;
 	}
 	
-	public static String formatName(String name) { // Affectionately nicknamed as 'title()' internally, 
+	protected static String formatName(String name) { // Affectionately nicknamed as 'title()' internally, 
 		String[] nameTrimed = name.trim().split("\\s"); //because it is a method that is available in the snake 
 		String formatedName = "";						//and not available in this cup of coffee. I'd rather coffee than
 		for(int i = 0; i < nameTrimed.length; i++) {    //not braces programming language.  
@@ -23,13 +23,20 @@ public abstract class FormatterService {
 		return name;
 	}
 	
-	public static String formatPhoneNumber(String phoneNumber){
+	protected static String formatPhoneNumber(String phoneNumber){
  		phoneNumber = phoneNumber.trim();
  		ValidatorService.validatePhoneNumber(phoneNumber);
 		StringBuilder sb = new StringBuilder();
-	    sb.append("(" + phoneNumber.substring(0, 2) + ")" + phoneNumber.substring(2, 6) 
-	    + "-" + phoneNumber.substring(6, 10));
-	    phoneNumber = sb.toString();
+		if(phoneNumber.length() == 10) {
+			sb.append("(" + phoneNumber.substring(0, 2) + ")" + phoneNumber.substring(2, 6) 
+		    + "-" + phoneNumber.substring(6, 10));
+		    phoneNumber = sb.toString();
+		}else if(phoneNumber.length() == 11){
+			sb.append("(" + phoneNumber.substring(0, 2) + ")" + phoneNumber.substring(2, 7) 
+		    + "-" + phoneNumber.substring(7, 11));
+		    phoneNumber = sb.toString();
+		}
+	    
 	    return phoneNumber;
 	}
 	
