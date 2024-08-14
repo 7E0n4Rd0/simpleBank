@@ -16,24 +16,19 @@ public class Program {
 		Locale.setDefault(Locale.ENGLISH);
 		Scanner input = new Scanner(System.in);
 		
+		UI.printASCIILogo();
+		
 		Agency agency = RegistrationService.registerAgency();
 		Account account = RegistrationService.registerAccount(agency);
-		
-		StringBuilder welcomeMessage = new StringBuilder();
-		welcomeMessage.append("Hello, " + account.getClient().getNameClient() + 
-				". Thanks to open your account in the simpleBank.\n" +
-				"The number of your account is " + account.getNumberAccount() + 
-				" and password is " + account.getPasswordAccount() +". Don't forget it.\n");
-
-		System.out.println(welcomeMessage);
 		
 		while(true) {
 			try {	
 				while(true) {
-					System.out.println("\nWhat you would like to do today? ");
-					System.out.println("[1] withdraw\n[2] deposit\n[3] check balance\n[4] exit");
+					UI.printASCIILogo();
+					UI.printHelloMessage(account);
+					UI.printBankFunctionsMessage();
 					double amount = 0;
-					int answer = input.nextInt();
+					int answer = Integer.parseInt(input.nextLine());
 					switch(answer) {
 					case 1:
 						while(true) {
@@ -101,16 +96,18 @@ public class Program {
 						throw new InvalidOperationException("This operation does not exist!");
 					}
 					if(answer == 4) {
+						input.close();
 						break;
 					}
 				}
 				break;
 			}catch(InputMismatchException e) {
-				System.out.println("Error: Only numbers will be accepted.");
+				System.out.println("Error: Caracters different from numbers are not allowed!.");
 			}catch(InvalidOperationException e) {
 				System.out.println("Error: " + e.getMessage());
-			}
+			}	
 		}
+		
 	}
 }
 //Finished at a wednesday on july seventeen 21:56. 

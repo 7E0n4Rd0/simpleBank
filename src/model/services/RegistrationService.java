@@ -61,17 +61,18 @@ public abstract class RegistrationService {
 	
 	public static Account registerAccount(Agency agency) {
 		Client client = registerClient();
-		int numberAcc = 0, password = 0;
+		int numberAcc = 0;
+		String password = "";
 		while(true) {
 			try {
 				System.out.println("\nAccount Data");
 				numberAcc = random.nextInt(1, 9999);
 				System.out.print("Account password: ");
-				password = input.nextInt();
+				password = input.nextLine();
 				ValidatorService.validatePassword(password);
 				break;
 			}catch(InputMismatchException e) {
-				System.out.println("Error: was expected to only type numbers");
+				System.out.println("Error: Caracters different from numbers are not allowed!");
 			}catch(IllegalArgumentException e) {
 				System.out.println("Error: " + e.getMessage());
 			}

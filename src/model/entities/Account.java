@@ -2,7 +2,7 @@ package model.entities;
 
 public class Account {
 	private Integer numberAccount;
-	private Integer passwordAccount;
+	private String passwordAccount;
 	private Double balance;
 	private Client client;
 	
@@ -10,7 +10,7 @@ public class Account {
 	public Account() {
 	}
 
-	public Account(Integer numberAccount, Integer passwordAccount, Client client) {
+	public Account(Integer numberAccount, String passwordAccount, Client client) {
 		this.client = client;
 		this.numberAccount = numberAccount;
 		this.passwordAccount = passwordAccount;
@@ -21,7 +21,7 @@ public class Account {
 		return numberAccount;
 	}
 	
-	public Integer getPasswordAccount() {
+	public String getPasswordAccount() {
 		return passwordAccount;
 	}
 	

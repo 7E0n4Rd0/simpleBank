@@ -6,11 +6,10 @@ import model.entities.Agency;
 import model.excpetion.InvalidCPFExcpetion;
 import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidNameException;
-import model.excpetion.InvalidOperationException;
 import model.excpetion.InvalidPhoneNumberException;
 
 public abstract class ValidatorService {
-	public static void validateAccount(Agency agency,Integer numberAcc, Integer passwordAcc) throws InvalidDataException {
+	public static void validateAccount(Agency agency,Integer numberAcc, String passwordAcc) throws InvalidDataException {
 		validatePassword(passwordAcc);
 		for(int i = 0; i < agency.getAccountsList().size(); i++) {
 			if(agency.getAccountsList().get(i).getNumberAccount().equals(numberAcc) &&
@@ -22,14 +21,15 @@ public abstract class ValidatorService {
 				throw new InvalidDataException("The account is invalid");
 			}
 		}
-		
 	}
 	
-	protected static void validatePassword(Integer passwordAcc) throws InputMismatchException{
-		String passwordString = "" + passwordAcc;
+	protected static String validatePassword(String passwordString) throws InputMismatchException{
 		if(passwordString.length() > 4 || passwordString.length() < 4) {
 			throw new IllegalArgumentException("The password must contain 4 digits only.");
+		}if(!passwordString.matches("[0-9]")) {
+			return null;
 		}
+		return passwordString;
 	}
 	
 	// Soon I'll remove this returning Strings and put the try-catch.
@@ -52,7 +52,7 @@ public abstract class ValidatorService {
 	
 	protected static void validatePhoneNumber(String phoneNumber) throws InvalidPhoneNumberException{
 		if(!phoneNumber.matches("^[(]?[1-9]{2}[)]?(?:[2-8]|9[\\d])\\d{3}[-]?\\d{4}$")){
-			throw new InvalidPhoneNumberException("This number is invalid");
+			throw new InvalidPhoneNumberException("This phone number is invalid");
 	 	}
 	}
 }
