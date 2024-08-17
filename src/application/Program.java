@@ -1,4 +1,4 @@
-package aplication;
+package application;
 
 import java.util.InputMismatchException;
 import java.util.Locale;
@@ -15,10 +15,28 @@ public class Program {
 	public static void main(String[] args) {
 		Locale.setDefault(Locale.ENGLISH);
 		Scanner input = new Scanner(System.in);
+		String n = "";
 		
-		UI.printASCIILogo();
+		while(!OtherService.isNumber(n)) {
+			try {
+				UI.clearScreen();
+				UI.mainMenu();
+				n = input.nextLine();
+				if(OtherService.isNumber(n)) {
+					break;
+				}else {
+					throw new InputMismatchException();
+				}
+			}catch(InputMismatchException e) {
+				UI.clearScreen();
+				System.out.print("Error: Caracters different from numbers are not allowed!.\n"
+						+ "press enter key to try again");
+				input.nextLine();
+			}
+			UI.clearScreen();
+		}
 		
-		Agency agency = RegistrationService.registerAgency();
+		/*Agency agency = RegistrationService.registerAgency();
 		Account account = RegistrationService.registerAccount(agency);
 		
 		while(true) {
@@ -26,7 +44,7 @@ public class Program {
 				while(true) {
 					UI.printASCIILogo();
 					UI.printHelloMessage(account);
-					UI.printBankFunctionsMessage();
+					UI.printBankFunctionsOptions();
 					double amount = 0;
 					int answer = Integer.parseInt(input.nextLine());
 					switch(answer) {
@@ -107,8 +125,6 @@ public class Program {
 				System.out.println("Error: " + e.getMessage());
 			}	
 		}
-		
+		*/
 	}
 }
-//Finished at a wednesday on july seventeen 21:56. 
-//I'll continue to I will continue to maintain this little project. - Leo

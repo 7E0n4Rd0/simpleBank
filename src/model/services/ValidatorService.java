@@ -26,7 +26,7 @@ public abstract class ValidatorService {
 	protected static String validatePassword(String passwordString) throws InputMismatchException{
 		if(passwordString.length() > 4 || passwordString.length() < 4) {
 			throw new IllegalArgumentException("The password must contain 4 digits only.");
-		}if(!passwordString.matches("[0-9]")) {
+		}if(!OtherService.isNumber(passwordString)) {
 			return null;
 		}
 		return passwordString;
