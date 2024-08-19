@@ -1,7 +1,6 @@
 package model.services;
 
-import java.util.InputMismatchException;
-
+import application.UI;
 import model.entities.Agency;
 import model.excpetion.InvalidCPFExcpetion;
 import model.excpetion.InvalidDataException;
@@ -23,11 +22,13 @@ public abstract class ValidatorService {
 		}
 	}
 	
-	protected static String validatePassword(String passwordString) throws InputMismatchException{
-		if(passwordString.length() > 4 || passwordString.length() < 4) {
-			throw new IllegalArgumentException("The password must contain 4 digits only.");
+	protected static String validatePassword(String passwordString){
+		if((passwordString.length() > 4 || passwordString.length() < 4) && !OtherService.isNumber(passwordString)) {
+			throw new IllegalArgumentException(UI.ANSI_RED + "The password must contain 4 digits only and caracters different from numbers are not allowed!" + UI.ANSI_RESET);
+		}if(passwordString.length() > 4 || passwordString.length() < 4) {
+			throw new IllegalArgumentException(UI.ANSI_RED + "The password must contain 4 digits only." + UI.ANSI_RESET);
 		}if(!OtherService.isNumber(passwordString)) {
-			return null;
+			throw new NumberFormatException(UI.ANSI_RED + "Caracters different from numbers are not allowed!" + UI.ANSI_RESET);
 		}
 		return passwordString;
 	}

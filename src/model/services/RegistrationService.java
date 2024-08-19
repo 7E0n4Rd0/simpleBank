@@ -1,9 +1,12 @@
 package model.services;
 
-import java.util.InputMismatchException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
+import application.UI;
 import model.entities.Account;
 import model.entities.Agency;
 import model.entities.Client;
@@ -16,11 +19,21 @@ public abstract class RegistrationService {
 	static Random random = new Random();
 	
 	public static Agency registerAgency() {
-		System.out.println("Agency Data");
-		System.out.print("Agency address: ");
+		String agencyFilepath = "C:/Users/leome/Desktop/Programming/Java/ws-eclipse/simpleBank/Files/agencys.csv";
+		UI.clearScreen();
+		UI.printANSCIILogo();
+		System.out.println("\t\t\tAgency Data");
+		System.out.print("\t\t\tAgency address: ");
+		
 		String agencyAddress = input.nextLine();
 		int agencyCode = random.nextInt(1, 9999);
 		Agency agency = new Agency(agencyCode, agencyAddress);
+		
+		try (BufferedWriter br = new BufferedWriter(new FileWriter(agencyFilepath))){
+			br.append(agency.getAgencyCode() +","+agency.getAgencyAddress());
+		}catch(IOException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
 		return agency;
 	}
 	
@@ -59,7 +72,8 @@ public abstract class RegistrationService {
 	
 	}
 	
-	public static Account registerAccount(Agency agency) {
+	public static void registerAccount(Agency agency) {
+		String accountsFilePath = "C:/Users/leome/Desktop/Programming/Java/ws-eclipse/simpleBank/Files/accounts.csv";
 		Client client = registerClient();
 		int numberAcc = 0;
 		String password = "";
@@ -71,14 +85,17 @@ public abstract class RegistrationService {
 				password = input.nextLine();
 				ValidatorService.validatePassword(password);
 				break;
-			}catch(InputMismatchException e) {
-				System.out.println("Error: Caracters different from numbers are not allowed!");
 			}catch(IllegalArgumentException e) {
 				System.out.println("Error: " + e.getMessage());
 			}
 		}
-		Account account = new Account(numberAcc, password, client);
+		Account account = new Account(agency.getAgencyCode(),numberAcc, password, client);
 		agency.addAccount(account);
-		return account;
+		try (BufferedWriter br = new BufferedWriter(new FileWriter(accountsFilePath, true))){
+			br.append(agency.getAccountsList().toString() + ",\n");
+		}catch(IOException e) {
+			System.out.println("Error: " + UI.ANSI_RED + e.getMessage() + UI.ANSI_RESET);
+		}
+		System.out.println(UI.ANSI_GREEN + "Account created with sucessfully!!" + UI.ANSI_RESET);
 	}
 }

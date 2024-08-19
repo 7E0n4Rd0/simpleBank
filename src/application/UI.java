@@ -3,12 +3,12 @@ package application;
 import model.entities.Account;
 
 public class UI {
-	private static final String ANSI_RESET = "\u001B[0m";
-	private static final String ANSI_GREEN = "\u001B[32m";
-	private static final String ANSI_RED = "\u001B[31m";
-	private static final String ANSI_YELLOW = "\u001B[33m";
+	public static final String ANSI_RESET = "\u001B[0m";
+	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_RED = "\u001B[31m";
+	public static final String ANSI_YELLOW = "\u001B[33m";
 	
-	private static void printANSCIILogo() {
+	public static void printANSCIILogo() {
 		StringBuilder ANSCIILogo = new StringBuilder();
 		ANSCIILogo.append(
 				  "           /$$                         /$$           /$$$$$$$                      /$$      \r\n".replace("$", "\u001B[32m$\u001B[0m")
@@ -30,9 +30,7 @@ public class UI {
 	public static void mainMenu() {
 		StringBuilder options = new StringBuilder();
 		UI.printANSCIILogo();
-		options.append("				[1] Register Agency\n				"
-									 + "[2] Register an Account\n" 
-						+"				>>> ");
+		options.append("\t\t\t[1] Register Agency\n\t\t\t[2] Register an Account\n\t\t\t[3] Exit\n"+ANSI_GREEN+"\t\t\t>>> "+ANSI_RESET);
 		System.out.print(options.toString());
 	}
 	

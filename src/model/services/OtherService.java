@@ -20,7 +20,12 @@ public abstract class OtherService {
 		}
 		loginInput.close();
 	}
-	public static boolean isNumber(String string) {
-		return string.matches("\\d");
+	public static boolean isNumber(String string){
+		try {
+			Integer.parseInt(string);
+		}catch(NumberFormatException e) {
+			return false;
+		}
+		return true;
 	}
 }

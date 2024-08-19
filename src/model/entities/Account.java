@@ -1,22 +1,24 @@
 package model.entities;
 
 public class Account {
+	private Integer agencyCode;
 	private Integer numberAccount;
 	private String passwordAccount;
 	private Double balance;
 	private Client client;
 	
-	
-	public Account() {
-	}
-
-	public Account(Integer numberAccount, String passwordAccount, Client client) {
-		this.client = client;
+	public Account(Integer agencyCode, Integer numberAccount, String passwordAccount, Client client) {
+		this.agencyCode = agencyCode;
 		this.numberAccount = numberAccount;
 		this.passwordAccount = passwordAccount;
+		this.client = client;
 		this.balance = 0.0;
 	}
-
+	
+	public Integer getAgencyCode() {
+		return agencyCode;
+	}
+	
 	public Integer getNumberAccount() {
 		return numberAccount;
 	}
@@ -46,10 +48,11 @@ public class Account {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Number accoount: " + getNumberAccount() + "\n");
-		sb.append("password: " + getPasswordAccount() + "\n");
-		sb.append("Balance: " + getBalance() + "\n");
-		sb.append("Client: " + getClient() + "\n");
+		sb.append("Agency Code: " + getAgencyCode() + "; ");
+		sb.append("Number account: " + getNumberAccount() + "; ");
+		sb.append("password: " + getPasswordAccount() + "; ");
+		sb.append("Balance: " + String.format("%.2f",getBalance()) + "; ");
+		sb.append(getClient());
 		return sb.toString();
 	}
 }

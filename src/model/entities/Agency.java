@@ -8,9 +8,6 @@ public class Agency {
 	private String agencyAddress;
 	private List<Account> accounts = new ArrayList<>();
 	
-	public Agency() {
-	}
-
 	public Agency(Integer agencyCode, String agencyAddress) {
 		this.agencyCode = agencyCode;
 		this.agencyAddress = agencyAddress;

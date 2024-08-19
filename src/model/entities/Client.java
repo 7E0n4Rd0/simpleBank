@@ -5,9 +5,6 @@ public class Client {
 	private String nameClient;
 	private String phoneNumberClient;
 	
-	public Client() {
-	}
-
 	public Client(String cpfClient, String nameClient, String phoneNumberClient) {
 		this.cpfClient = cpfClient;
 		this.nameClient = nameClient;
@@ -36,6 +33,6 @@ public class Client {
 	
 	@Override
 	public String toString() {
-		return getCpfClient() + " " + getNameClient() + " " + getPhoneNumberClient();
+		return "CPF: " + getCpfClient() + "; Name: " + getNameClient() + "; Phone Number: " + getPhoneNumberClient();
 	}
 }
