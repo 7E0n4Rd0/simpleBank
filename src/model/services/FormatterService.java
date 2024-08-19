@@ -6,7 +6,7 @@ import model.excpetion.InvalidPhoneNumberException;
 
 public abstract class FormatterService {
 	protected static String formatCPF(String cpf) throws InvalidCPFExcpetion {
-		ValidatorService.validateCPF(cpf);
+		ValidationService.validateCPF(cpf);
 		StringBuilder sb = new StringBuilder();
 		sb.append(cpf.substring(0, 3) + "." + cpf.substring(3, 6) + "."); 
 		sb.append(cpf.substring(6, 9) + "-" + cpf.substring(9, 11));
@@ -22,12 +22,12 @@ public abstract class FormatterService {
 					nameTrimed[i].toUpperCase().charAt(0)) + "\s";
 		}
 		name = name.replace(name, formatedName.trim());
-		ValidatorService.validateName(name);
+		ValidationService.validateName(name);
 		return name;
 	}
 	
 	protected static String formatPhoneNumber(String phoneNumber) throws InvalidPhoneNumberException{
- 		ValidatorService.validatePhoneNumber(phoneNumber);
+ 		ValidationService.validatePhoneNumber(phoneNumber);
 		StringBuilder sb = new StringBuilder();
 		if(phoneNumber.length() == 10) {
 			sb.append("(" + phoneNumber.substring(0, 2) + ")" + phoneNumber.substring(2, 6) 

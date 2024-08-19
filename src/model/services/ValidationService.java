@@ -7,7 +7,7 @@ import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidNameException;
 import model.excpetion.InvalidPhoneNumberException;
 
-public abstract class ValidatorService {
+public abstract class ValidationService {
 	public static void validateAccount(Agency agency,Integer numberAcc, String passwordAcc) throws InvalidDataException {
 		validatePassword(passwordAcc);
 		for(int i = 0; i < agency.getAccountsList().size(); i++) {

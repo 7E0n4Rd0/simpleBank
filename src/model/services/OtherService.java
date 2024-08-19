@@ -14,7 +14,7 @@ public abstract class OtherService {
 		loginInput.nextLine();
 		String passwordAcc = loginInput.nextLine();
 		try {
-			ValidatorService.validateAccount(agency, numberAcc, passwordAcc);
+			ValidationService.validateAccount(agency, numberAcc, passwordAcc);
 		}catch(InvalidDataException e) {
 			System.out.println("Error: " + e.getMessage());
 		}

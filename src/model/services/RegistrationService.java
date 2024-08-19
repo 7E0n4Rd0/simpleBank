@@ -83,7 +83,7 @@ public abstract class RegistrationService {
 				numberAcc = random.nextInt(1, 9999);
 				System.out.print("Account password: ");
 				password = input.nextLine();
-				ValidatorService.validatePassword(password);
+				ValidationService.validatePassword(password);
 				break;
 			}catch(IllegalArgumentException e) {
 				System.out.println("Error: " + e.getMessage());
