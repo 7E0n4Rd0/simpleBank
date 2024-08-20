@@ -33,6 +33,6 @@ public class Client {
 	
 	@Override
 	public String toString() {
-		return "CPF: " + getCpfClient() + "; Name: " + getNameClient() + "; Phone Number: " + getPhoneNumberClient();
+		return "CPF: " + getCpfClient() + ", Name: " + getNameClient() + ", Phone Number: " + getPhoneNumberClient();
 	}
 }

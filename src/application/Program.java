@@ -43,17 +43,22 @@ public class Program {
 								fileExists = false;
 								break;
 							}
+							fileExists = true;
 							String line = br.readLine();
 							String[] fields = line.split(",");
-							RegistrationService.registerAccount(new Agency(Integer.parseInt(fields[0]), fields[1]));
+							RegistrationService.registerAccount(new Agency(fields[0], fields[1]));
+							
 						}catch (IOException e) {
 							System.out.println("Error: " + e.getMessage());
 						}
 						if(!fileExists) {
 							throw new FileNotFoundException();
 						}
+						break;
 					case 3:
-						System.out.println("\t\t\tBye bye");
+						UI.clearScreen();
+						UI.printANSCIILogo();
+						System.out.println("\t\t\tBye Bye, have a nice day!!!");
 						break;
 					}	
 				}else {
@@ -79,96 +84,5 @@ public class Program {
 				break;
 			}
 		}
-		
-		/*
-		This is the ATM service, I'll move this later.
-		
-		while(true) {
-			try {	
-				while(true) {
-					UI.printASCIILogo();
-					UI.printHelloMessage(account);
-					UI.printBankFunctionsOptions();
-					double amount = 0;
-					int answer = Integer.parseInt(input.nextLine());
-					switch(answer) {
-					case 1:
-						while(true) {
-							System.out.println("Withdraw");
-							OtherService.login(agency);
-							break;
-						}
-						while(true) {
-							System.out.print("Enter the amount to withdraw: $");
-							amount = input.nextDouble();
-							try {
-								if(amount <= 0.0) {
-									throw new IllegalArgumentException("You can't withdraw $"+ String.format("%.2f", amount));
-								}if(account.getBalance() < amount) {
-									throw new IllegalArgumentException("You can't withdraw an amount that is highier than your balance.");
-								}
-								account.withdraw(amount);
-								account.checkBalance();
-								break;
-							}catch(IllegalArgumentException e) {
-								System.out.println("Error: " + e.getMessage());
-							}catch(InputMismatchException e) {
-								System.out.println("Error: was expected to only type numbers");
-							}
-						}
-					break;
-					
-					case 2:
-						while(true) {
-							System.out.println("Deposit");
-							OtherService.login(agency);
-							break;
-						}
-						while(true) {
-							System.out.print("Enter the amount to deposit: $");
-							amount = input.nextDouble();
-							try {
-								if(amount <= 0.0) {
-									throw new IllegalArgumentException("You can't deposit $"+ String.format("%.2f", amount));
-								}
-								account.deposit(amount);
-								account.checkBalance();
-								break;
-							}catch(IllegalArgumentException e) {
-								System.out.println("Error: " + e.getMessage());
-							}catch(InputMismatchException e) {
-								System.out.println("Error: was expected to only type numbers");
-							}
-						}
-					break;
-					
-					case 3:
-						while(true) {
-							System.out.println("Check Balance");
-							OtherService.login(agency);
-							break;
-						}
-						account.checkBalance();
-					break;
-					
-					case 4:
-						System.out.println("Bye bye!!");
-					break;
-					default: 
-						throw new InvalidOperationException("This operation does not exist!");
-					}
-					if(answer == 4) {
-						input.close();
-						break;
-					}
-				}
-				break;
-			}catch(InputMismatchException e) {
-				System.out.println("Error: Caracters different from numbers are not allowed!.");
-			}catch(InvalidOperationException e) {
-				System.out.println("Error: " + e.getMessage());
-			}	
-		}
-		*/
 	}
 }

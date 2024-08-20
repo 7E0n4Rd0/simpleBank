@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Agency {
-	private Integer agencyCode;
+	private String agencyCode;
 	private String agencyAddress;
 	private List<Account> accounts = new ArrayList<>();
 	
-	public Agency(Integer agencyCode, String agencyAddress) {
+	public Agency(String agencyCode, String agencyAddress) {
 		this.agencyCode = agencyCode;
 		this.agencyAddress = agencyAddress;
 	}
@@ -21,10 +21,9 @@ public class Agency {
 		this.agencyAddress = agencyAddress;
 	}
 
-	public Integer getAgencyCode() {
+	public String getAgencyCode() {
 		return agencyCode;
 	}
-	
 
 	public void addAccount(Account account) {
 		accounts.add(account);
