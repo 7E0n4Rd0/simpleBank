@@ -32,10 +32,10 @@ public class Client {
 	public String getCpfClient() {
 		return cpfClient;
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(cpfClient, nameClient, phoneNumberClient);
+		return Objects.hash(cpfClient);
 	}
 
 	@Override
@@ -47,8 +47,7 @@ public class Client {
 		if (getClass() != obj.getClass())
 			return false;
 		Client other = (Client) obj;
-		return Objects.equals(cpfClient, other.cpfClient) && Objects.equals(nameClient, other.nameClient)
-				&& Objects.equals(phoneNumberClient, other.phoneNumberClient);
+		return Objects.equals(cpfClient, other.cpfClient);
 	}
 
 	@Override

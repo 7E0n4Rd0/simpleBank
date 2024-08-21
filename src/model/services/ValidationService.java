@@ -1,9 +1,11 @@
 package model.services;
 
+import java.util.Set;
+
 import application.UI;
 import model.entities.Account;
-import model.entities.Agency;
 import model.excpetion.InvalidCPFExcpetion;
+import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidNameException;
 import model.excpetion.InvalidPhoneNumberException;
 
@@ -20,7 +22,7 @@ public abstract class ValidationService {
 	}
 	
 	// Soon I'll remove this returning Strings and put the try-catch.
-	protected static void validateCPF(String cpf) throws InvalidCPFExcpetion {
+	public static void validateCPF(String cpf) throws InvalidCPFExcpetion {
 		if(!cpf.matches("^\\d{3}[.]?\\d{3}[.]?\\d{3}[-]?\\d{2}$")) { //This I tried hard to do and that 'validatePhoneNumber'
 			throw new InvalidCPFExcpetion("Invalid CPF"); 
 		}
@@ -43,10 +45,13 @@ public abstract class ValidationService {
 	 	}
 	}
 	
-	protected static void validateAccount(Agency agency, String agencyCode,String numberAcc, String passwordAcc) {
-		/*if(agency.getAccountsList().contains(new Account(agencyCode, numberAcc, passwordAcc))) {
-			
-		}*/
-		
+	public static boolean validateAccount(Set<Account> accounts, String numberAcc, String cpfClient){
+		boolean founded = false;
+		for(Account acc : accounts) {
+			if(acc.getNumberAccount().contains(numberAcc) && acc.getClient().getCpfClient().contains(cpfClient)) {
+				founded = true;
+			}
+		}
+		return founded;
 	}
 }

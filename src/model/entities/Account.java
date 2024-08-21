@@ -47,10 +47,10 @@ public class Account {
 	public void checkBalance() {
 		System.out.println("Your current is R$" + String.format("%.2f", getBalance()));
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(client, numberAccount, passwordAccount);
+		return Objects.hash(client, numberAccount);
 	}
 
 	@Override
@@ -62,8 +62,7 @@ public class Account {
 		if (getClass() != obj.getClass())
 			return false;
 		Account other = (Account) obj;
-		return Objects.equals(client, other.client) && Objects.equals(numberAccount, other.numberAccount)
-				&& Objects.equals(passwordAccount, other.passwordAccount);
+		return Objects.equals(client, other.client) && Objects.equals(numberAccount, other.numberAccount);
 	}
 
 	@Override

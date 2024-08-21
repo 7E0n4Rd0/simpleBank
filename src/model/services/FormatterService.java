@@ -5,7 +5,7 @@ import model.excpetion.InvalidNameException;
 import model.excpetion.InvalidPhoneNumberException;
 
 public abstract class FormatterService {
-	protected static String formatCPF(String cpf) throws InvalidCPFExcpetion {
+	public static String formatCPF(String cpf) throws InvalidCPFExcpetion {
 		ValidationService.validateCPF(cpf);
 		StringBuilder sb = new StringBuilder();
 		sb.append(cpf.substring(0, 3) + "." + cpf.substring(3, 6) + "."); 

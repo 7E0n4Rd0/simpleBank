@@ -1,18 +1,27 @@
 package application;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.Set;
 
+import model.entities.Account;
 import model.entities.Agency;
+import model.excpetion.InvalidCPFExcpetion;
 import model.excpetion.InvalidDataException;
+import model.excpetion.InvalidOperationException;
+import model.services.FormatterService;
 import model.services.OtherService;
 import model.services.RegistrationService;
+import model.services.ValidationService;
 
 public class Program {
 	
@@ -29,7 +38,7 @@ public class Program {
 				if(OtherService.isNumber(n)) {
 					Short number = Short.parseShort(n);  
 					if(number > 4 || number <= 0) {
-						throw new IndexOutOfBoundsException();
+						throw new IndexOutOfBoundsException("\t\t\tError: there is not an option for this number!\n \t\t\tpress enter key to try again");
 					}
 					switch(number){
 					case 1:
@@ -61,24 +70,67 @@ public class Program {
 					case 3:
 						UI.clearScreen();
 						UI.printANSCIILogo();
-						/*System.out.println("\t\t\tInform the account data");
-						System.out.println("\t\t\tNumber Account: ");
+						String numberAcc = "", clientCPF = "";
+						System.out.println("\t\t\tInform the account data");
+						while(true) {
+							System.out.print("\t\t\tNumber Account: ");
+							try {
+								numberAcc = input.nextLine();
+								OtherService.isNumber(numberAcc);
+							}catch(NumberFormatException e) {
+								System.out.println(e.getMessage());
+							}
+							break;
+						}
+						while(true) {
+							System.out.print("\t\t\tClient CPF: ");
+							try {
+								clientCPF = input.nextLine();
+								ValidationService.validateCPF(clientCPF);
+							}catch(InvalidCPFExcpetion e) {
+								System.out.println(e.getMessage());
+							}
+							break;
+						}
+						String fileAccspath;
 						try {
-							String numberAcc = input.nextLine();
-							OtherService.isNumber(numberAcc);
-						}catch(NumberFormatException e) {
+							fileAccspath = "C:/Users/leome/Desktop/Programming/Java/ws-eclipse/simpleBank/Files/accounts.csv";
+							File fileAccs = new File(fileAccspath);
+							Set<Account> listAcc = new HashSet<Account>();
+							final String innerNumberAcc = new String(numberAcc);
+							final String innerClientCPF = new String(FormatterService.formatCPF(clientCPF));
+							listAcc.addAll(OtherService.loadAccountList(fileAccs));
+							if(!ValidationService.validateAccount(listAcc, innerNumberAcc, innerClientCPF)) {
+								throw new InvalidOperationException("Couldn't find the account!!");
+							}
+							System.out.print("\t\t\t"+UI.ANSI_RED+"[Destructive Action]"+UI.ANSI_RESET+
+									"Are you sure you want to delete the account [" +"Number Account: "+innerNumberAcc +" CPF: "+ innerClientCPF+"]?[Y/N]\n\t\t\t>>>");
+							String answer = input.nextLine().toUpperCase();
+							while(answer.charAt(0) != 'Y' || answer.charAt(0) != 'N') {
+								System.out.print("\t\t\tError: there is not an option for this caracter!\n "
+										+ "\t\t\tpress enter key to try again");
+								answer = input.nextLine().toUpperCase();
+								if(answer.charAt(0) == 'Y') {
+									listAcc.removeIf(x -> x.getNumberAccount().equals(innerNumberAcc) && x.getClient().getCpfClient().equals(innerClientCPF));
+									try (BufferedWriter br = new BufferedWriter(new FileWriter(fileAccspath, true))){
+										for(Account account : listAcc) {
+											br.append(account.getAgencyCode() + "," + account.getNumberAccount() + "," 
+													+ account.getPasswordAccount() + "," + account.getBalance() + ","
+													+ account.getClient().getCpfClient() + "," + account.getClient().getNameClient() + ","
+													+ account.getClient().getPhoneNumberClient() + "\n");
+										}
+									}catch(IOException e) {
+										System.out.println("Error: " + UI.ANSI_RED + e.getMessage() + UI.ANSI_RESET);
+									}
+								}else if(answer.charAt(0) != 'N') {
+									System.out.println(">>> Returning to the main menu...");
+									break;
+								}
+							}
+						}catch(InvalidOperationException | InvalidCPFExcpetion e) {
 							System.out.println(e.getMessage());
 						}
-						System.out.println("\t\t\tAccount Password: ");
-						try {
-							String passwordAcc = input.nextLine();
-							OtherService.isNumber(passwordAcc);
-						}catch(NumberFormatException e) {
-							System.out.println(e.getMessage());
-						}*/
-						String fileAccspath = "C:/Users/leome/Desktop/Programming/Java/ws-eclipse/simpleBank/Files/accounts.csv";
-						File fileAccs = new File(fileAccspath);
-						OtherService.loadAccountList(fileAccs);
+						
 						break;
 					case 4:
 						UI.clearScreen();
@@ -95,7 +147,6 @@ public class Program {
 						+ "\t\t\tpress enter key to try again");
 				input.nextLine();
 			}catch(IndexOutOfBoundsException e) {
-				System.out.print("\t\t\tError: there is not an option for this number!\n \t\t\tpress enter key to try again");
 				input.nextLine();
 			}catch(FileNotFoundException e) {
 				UI.clearScreen();
