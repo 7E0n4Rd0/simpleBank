@@ -1,5 +1,7 @@
 package model.entities;
 
+import java.util.Objects;
+
 public class Client {
 	private String cpfClient;
 	private String nameClient;
@@ -31,6 +33,24 @@ public class Client {
 		return cpfClient;
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(cpfClient, nameClient, phoneNumberClient);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Client other = (Client) obj;
+		return Objects.equals(cpfClient, other.cpfClient) && Objects.equals(nameClient, other.nameClient)
+				&& Objects.equals(phoneNumberClient, other.phoneNumberClient);
+	}
+
 	@Override
 	public String toString() {
 		return "CPF: " + getCpfClient() + ", Name: " + getNameClient() + ", Phone Number: " + getPhoneNumberClient();

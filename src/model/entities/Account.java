@@ -1,5 +1,7 @@
 package model.entities;
 
+import java.util.Objects;
+
 public class Account {
 	private String agencyCode;
 	private String numberAccount;
@@ -45,6 +47,25 @@ public class Account {
 	public void checkBalance() {
 		System.out.println("Your current is R$" + String.format("%.2f", getBalance()));
 	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(client, numberAccount, passwordAccount);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Account other = (Account) obj;
+		return Objects.equals(client, other.client) && Objects.equals(numberAccount, other.numberAccount)
+				&& Objects.equals(passwordAccount, other.passwordAccount);
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

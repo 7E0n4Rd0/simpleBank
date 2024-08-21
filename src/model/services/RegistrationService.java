@@ -11,6 +11,7 @@ import model.entities.Account;
 import model.entities.Agency;
 import model.entities.Client;
 import model.excpetion.InvalidCPFExcpetion;
+import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidNameException;
 import model.excpetion.InvalidPhoneNumberException;
 
@@ -74,7 +75,7 @@ public abstract class RegistrationService {
 	
 	}
 	
-	public static void registerAccount(Agency agency) {
+	public static void registerAccount(Agency agency) throws InvalidDataException {
 		String accountsFilePath = "C:/Users/leome/Desktop/Programming/Java/ws-eclipse/simpleBank/Files/accounts.csv";
 		Client client = registerClient();
 		String numberAcc = "";
@@ -94,9 +95,15 @@ public abstract class RegistrationService {
 			}
 		}
 		Account account = new Account(agency.getAgencyCode(), numberAcc, password, client);
+		if(agency.getAccountsList().contains(account)) {
+			throw new InvalidDataException("This account is already registered!!");
+		}
 		agency.addAccount(account);
 		try (BufferedWriter br = new BufferedWriter(new FileWriter(accountsFilePath, true))){
-			br.append(agency.getAccountsList().toString() + ",\n");
+			br.append(account.getAgencyCode() + "," + account.getNumberAccount() + "," 
+					+ account.getPasswordAccount() + "," + account.getBalance() + ","
+					+ account.getClient().getCpfClient() + "," + account.getClient().getNameClient() + ","
+					+ account.getClient().getPhoneNumberClient() + "\n");
 		}catch(IOException e) {
 			System.out.println("Error: " + UI.ANSI_RED + e.getMessage() + UI.ANSI_RESET);
 		}

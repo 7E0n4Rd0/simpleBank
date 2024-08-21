@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Scanner;
 
 import model.entities.Agency;
+import model.excpetion.InvalidDataException;
 import model.services.OtherService;
 import model.services.RegistrationService;
 
@@ -27,7 +28,7 @@ public class Program {
 				n = input.nextLine();
 				if(OtherService.isNumber(n)) {
 					Short number = Short.parseShort(n);  
-					if(number > 3 || number <= 0) {
+					if(number > 4 || number <= 0) {
 						throw new IndexOutOfBoundsException();
 					}
 					switch(number){
@@ -50,12 +51,36 @@ public class Program {
 							
 						}catch (IOException e) {
 							System.out.println("Error: " + e.getMessage());
+						} catch (InvalidDataException e) {
+							System.out.println(e.getMessage());
 						}
 						if(!fileExists) {
 							throw new FileNotFoundException();
 						}
 						break;
 					case 3:
+						UI.clearScreen();
+						UI.printANSCIILogo();
+						/*System.out.println("\t\t\tInform the account data");
+						System.out.println("\t\t\tNumber Account: ");
+						try {
+							String numberAcc = input.nextLine();
+							OtherService.isNumber(numberAcc);
+						}catch(NumberFormatException e) {
+							System.out.println(e.getMessage());
+						}
+						System.out.println("\t\t\tAccount Password: ");
+						try {
+							String passwordAcc = input.nextLine();
+							OtherService.isNumber(passwordAcc);
+						}catch(NumberFormatException e) {
+							System.out.println(e.getMessage());
+						}*/
+						String fileAccspath = "C:/Users/leome/Desktop/Programming/Java/ws-eclipse/simpleBank/Files/accounts.csv";
+						File fileAccs = new File(fileAccspath);
+						OtherService.loadAccountList(fileAccs);
+						break;
+					case 4:
 						UI.clearScreen();
 						UI.printANSCIILogo();
 						System.out.println("\t\t\tBye Bye, have a nice day!!!");
@@ -80,7 +105,7 @@ public class Program {
 				input.nextLine();
 			}
 			UI.clearScreen();
-			if(n.equals("3")) {
+			if(n.equals("4")) {
 				break;
 			}
 		}

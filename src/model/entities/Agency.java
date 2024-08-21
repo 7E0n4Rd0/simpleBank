@@ -1,12 +1,13 @@
 package model.entities;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Agency {
 	private String agencyCode;
 	private String agencyAddress;
-	private List<Account> accounts = new ArrayList<>();
+	private Set<Account> accounts = new HashSet<Account>();
 	
 	public Agency(String agencyCode, String agencyAddress) {
 		this.agencyCode = agencyCode;
@@ -33,7 +34,7 @@ public class Agency {
 		accounts.remove(account);
 	}
 	
-	public List<Account> getAccountsList(){
+	public Set<Account> getAccountsList(){
 		return accounts;
 	}
 	
