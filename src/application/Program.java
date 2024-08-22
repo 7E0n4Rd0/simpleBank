@@ -25,9 +25,13 @@ import model.services.ValidationService;
 
 public class Program {
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws InvalidOperationException{
 		Locale.setDefault(Locale.ENGLISH);
 		Scanner input = new Scanner(System.in);
+		File simpleBankDir = new File("C:/simpleBank/files");
+		if(!simpleBankDir.mkdirs() && !simpleBankDir.exists()) {
+			throw new InvalidOperationException("Something went wrong, couldn't make directory '/files'");
+		}
 		String n = "";
 		
 		while(true){
@@ -38,14 +42,21 @@ public class Program {
 				if(OtherService.isNumber(n)) {
 					Short number = Short.parseShort(n);  
 					if(number > 4 || number <= 0) {
-						throw new IndexOutOfBoundsException("\t\t\tError: there is not an option for this number!\n \t\t\tpress enter key to try again");
+						throw new IndexOutOfBoundsException("\t\t\tError: there is not an option for this number!\n\t\t\tpress enter key to try again");
 					}
 					switch(number){
 					case 1:
+						if(!simpleBankDir.exists()) {
+							throw new InvalidOperationException("Something went wrong, couldn't find directory '/files'");
+						}
 						Agency agency = RegistrationService.registerAgency();
 						break;
 					case 2:
-						String path = "C:/Users/leome/Desktop/Programming/Java/ws-eclipse/simpleBank/Files/agencys.csv";
+						if(!simpleBankDir.exists()) {
+							throw new InvalidOperationException("Something went wrong, couldn't find directory '/files'");
+						}
+
+						String path = "C:/simpleBank/files/agencys.csv";
 						File file = new File(path);
 						boolean fileExists = false;
 						try (BufferedReader br = new BufferedReader(new FileReader(path))){
@@ -64,14 +75,29 @@ public class Program {
 							System.out.println(e.getMessage());
 						}
 						if(!fileExists) {
-							throw new FileNotFoundException();
+							throw new FileNotFoundException("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file\n" + UI.ANSI_RESET);
 						}
 						break;
 					case 3:
 						UI.clearScreen();
+						if(!simpleBankDir.exists()) {
+							throw new InvalidOperationException("Something went wrong, couldn't find directory '/files'");
+						}
+						String fileAccspath = "C:/simpleBank/files/accounts.csv";
+						File fileAccs = new File(fileAccspath);
+						if(!fileAccs.exists()) {
+							throw new FileNotFoundException("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the accounts.csv file\n" + UI.ANSI_RESET);
+						}
+						Set<Account> listAcc = new HashSet<Account>();
+						try {
+							listAcc.addAll(OtherService.loadAccountList(fileAccs));
+						}catch(InvalidOperationException e) {
+							System.out.println(e.getMessage());
+							break;
+						}
 						UI.printANSCIILogo();
 						String numberAcc = "", clientCPF = "";
-						System.out.println("\t\t\tInform the account data");
+						System.out.println(UI.ANSI_GREEN+"\t\t\tInform the account data"+UI.ANSI_RESET);
 						while(true) {
 							System.out.print("\t\t\tNumber Account: ");
 							try {
@@ -92,27 +118,19 @@ public class Program {
 							}
 							break;
 						}
-						String fileAccspath;
 						try {
-							fileAccspath = "C:/Users/leome/Desktop/Programming/Java/ws-eclipse/simpleBank/Files/accounts.csv";
-							File fileAccs = new File(fileAccspath);
-							Set<Account> listAcc = new HashSet<Account>();
 							final String innerNumberAcc = new String(numberAcc);
 							final String innerClientCPF = new String(FormatterService.formatCPF(clientCPF));
-							listAcc.addAll(OtherService.loadAccountList(fileAccs));
 							if(!ValidationService.validateAccount(listAcc, innerNumberAcc, innerClientCPF)) {
 								throw new InvalidOperationException("Couldn't find the account!!");
 							}
-							System.out.print("\t\t\t"+UI.ANSI_RED+"[Destructive Action]"+UI.ANSI_RESET+
-									"Are you sure you want to delete the account [" +"Number Account: "+innerNumberAcc +" CPF: "+ innerClientCPF+"]?[Y/N]\n\t\t\t>>>");
-							String answer = input.nextLine().toUpperCase();
-							while(answer.charAt(0) != 'Y' || answer.charAt(0) != 'N') {
-								System.out.print("\t\t\tError: there is not an option for this caracter!\n "
-										+ "\t\t\tpress enter key to try again");
-								answer = input.nextLine().toUpperCase();
+							while(true) {
+								System.out.print("\t\t\t"+UI.ANSI_RED+"[Destructive Action]"+UI.ANSI_RESET+
+										"Are you sure you want to delete the account [" +"Number Account: "+innerNumberAcc +" CPF: "+ innerClientCPF+"] [Y/N]?\n\t\t\t>>>");
+								String answer = input.nextLine().toUpperCase();
 								if(answer.charAt(0) == 'Y') {
 									listAcc.removeIf(x -> x.getNumberAccount().equals(innerNumberAcc) && x.getClient().getCpfClient().equals(innerClientCPF));
-									try (BufferedWriter br = new BufferedWriter(new FileWriter(fileAccspath, true))){
+									try (BufferedWriter br = new BufferedWriter(new FileWriter(fileAccspath))){
 										for(Account account : listAcc) {
 											br.append(account.getAgencyCode() + "," + account.getNumberAccount() + "," 
 													+ account.getPasswordAccount() + "," + account.getBalance() + ","
@@ -122,15 +140,17 @@ public class Program {
 									}catch(IOException e) {
 										System.out.println("Error: " + UI.ANSI_RED + e.getMessage() + UI.ANSI_RESET);
 									}
-								}else if(answer.charAt(0) != 'N') {
+									break;
+								}else if(answer.charAt(0) == 'N') {
 									System.out.println(">>> Returning to the main menu...");
 									break;
+								}else {
+									System.out.print("\t\t\tError: there is not an option for this caracter!\n ");
 								}
 							}
 						}catch(InvalidOperationException | InvalidCPFExcpetion e) {
 							System.out.println(e.getMessage());
 						}
-						
 						break;
 					case 4:
 						UI.clearScreen();
@@ -143,16 +163,21 @@ public class Program {
 				}
 				
 			}catch(InputMismatchException e) {
-				System.out.print("\t\t\tError: Caracters different from numbers are not allowed!.\n"
+				System.out.print("\t\t\tError: "+UI.ANSI_RED+"Caracters different from numbers are not allowed!."+UI.ANSI_RESET+"\n"
 						+ "\t\t\tpress enter key to try again");
 				input.nextLine();
 			}catch(IndexOutOfBoundsException e) {
+				System.out.println(e.getMessage() + "\n\t\t\tpress enter key to try again");
 				input.nextLine();
 			}catch(FileNotFoundException e) {
 				UI.clearScreen();
 				UI.printANSCIILogo();
-				System.out.println("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file" + UI.ANSI_RESET 
-						+ "\n \t\t\tpress enter key to try again");
+				System.out.println(e.getMessage() + "\n\t\t\tpress enter key to try again");
+				input.nextLine();
+			} catch (InvalidOperationException e) {
+				UI.clearScreen();
+				UI.printANSCIILogo();
+				System.out.println(e.getMessage() + "\n\t\t\tpress enter key to try again");
 				input.nextLine();
 			}
 			UI.clearScreen();

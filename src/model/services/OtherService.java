@@ -64,7 +64,7 @@ public abstract class OtherService {
 			}
 			String line = br.readLine();
 			if(line == null) {
-				throw new InvalidOperationException("Fatal Error: The file agencys.csv is null!!");
+				throw new NullPointerException("Fatal Error: The file agencys.csv is null!!");
 			}
 			Set<Agency> agencys = new HashSet<Agency>();
 			while(line != null) {

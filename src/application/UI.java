@@ -30,11 +30,11 @@ public class UI {
 	public static void mainMenu() {
 		StringBuilder options = new StringBuilder();
 		UI.printANSCIILogo();
-		options.append("\t\t\t[1] Register Agency\n"
+		options.append("\t\t\t[1] Register an Agency\n"
 				+ "\t\t\t[2] Register an Account\n"
 				+ "\t\t\t[3] Delete an Account\n"
 				+ "\t\t\t[4] Exit\n"
-				+ANSI_GREEN+"\t\t\t\t>>> "+ANSI_RESET);
+				+ANSI_GREEN+"\t\t\t>>> "+ANSI_RESET);
 		System.out.print(options.toString());
 	}
 	

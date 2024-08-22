@@ -36,17 +36,6 @@ public class Account {
 	public Client getClient() {
 		return client;
 	}
-	
-	public void deposit(Double amount) {
-		this.balance += amount;
-	}
-	
-	public void withdraw(Double amount) {
-		this.balance -= amount;
-	}
-	public void checkBalance() {
-		System.out.println("Your current is R$" + String.format("%.2f", getBalance()));
-	}
 
 	@Override
 	public int hashCode() {

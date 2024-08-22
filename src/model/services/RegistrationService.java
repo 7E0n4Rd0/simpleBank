@@ -1,10 +1,13 @@
 package model.services;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
 import application.UI;
 import model.entities.Account;
@@ -13,6 +16,7 @@ import model.entities.Client;
 import model.excpetion.InvalidCPFExcpetion;
 import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidNameException;
+import model.excpetion.InvalidOperationException;
 import model.excpetion.InvalidPhoneNumberException;
 
 public abstract class RegistrationService {
@@ -20,7 +24,7 @@ public abstract class RegistrationService {
 	static Random random = new Random();
 	
 	public static Agency registerAgency() {
-		String agencyFilepath = "C:/Users/leome/Desktop/Programming/Java/ws-eclipse/simpleBank/Files/agencys.csv";
+		String agencyFilepath = "C:/simpleBank/files/agencys.csv";
 		UI.clearScreen();
 		UI.printANSCIILogo();
 		System.out.println("\t\t\tAgency Data");
@@ -76,7 +80,7 @@ public abstract class RegistrationService {
 	}
 	
 	public static void registerAccount(Agency agency) throws InvalidDataException {
-		String accountsFilePath = "C:/Users/leome/Desktop/Programming/Java/ws-eclipse/simpleBank/Files/accounts.csv";
+		String accsFilePath = "C:/simpleBank/files/accounts.csv";
 		Client client = registerClient();
 		String numberAcc = "";
 		String password = "";
@@ -95,11 +99,23 @@ public abstract class RegistrationService {
 			}
 		}
 		Account account = new Account(agency.getAgencyCode(), numberAcc, password, client);
+		Set<Account> listAllAcc = new HashSet<>();
+		try{
+			listAllAcc = OtherService.loadAccountList(new File(accsFilePath));
+		}catch(InvalidOperationException e) {
+			System.out.println(e.getMessage());
+		}
+		if(listAllAcc != null)
+			for(Account acc : listAllAcc) {
+				if(acc.getAgencyCode().equals(agency.getAgencyCode())) {
+					agency.addAccount(acc);
+				}
+			}
 		if(agency.getAccountsList().contains(account)) {
 			throw new InvalidDataException("This account is already registered!!");
 		}
 		agency.addAccount(account);
-		try (BufferedWriter br = new BufferedWriter(new FileWriter(accountsFilePath, true))){
+		try (BufferedWriter br = new BufferedWriter(new FileWriter(accsFilePath, true))){
 			br.append(account.getAgencyCode() + "," + account.getNumberAccount() + "," 
 					+ account.getPasswordAccount() + "," + account.getBalance() + ","
 					+ account.getClient().getCpfClient() + "," + account.getClient().getNameClient() + ","

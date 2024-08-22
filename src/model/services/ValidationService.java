@@ -24,7 +24,7 @@ public abstract class ValidationService {
 	// Soon I'll remove this returning Strings and put the try-catch.
 	public static void validateCPF(String cpf) throws InvalidCPFExcpetion {
 		if(!cpf.matches("^\\d{3}[.]?\\d{3}[.]?\\d{3}[-]?\\d{2}$")) { //This I tried hard to do and that 'validatePhoneNumber'
-			throw new InvalidCPFExcpetion("Invalid CPF"); 
+			throw new InvalidCPFExcpetion("Invalid CPF. Example: 123.456.789-00"); 
 		}
 	}
 	
