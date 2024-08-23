@@ -11,11 +11,11 @@ import model.excpetion.InvalidPhoneNumberException;
 public abstract class ValidationService {
 	protected static String validatePassword(String passwordString){
 		if((passwordString.length() > 4 || passwordString.length() < 4) && !OtherService.isNumber(passwordString)) {
-			throw new IllegalArgumentException("\t\t\tError: " + UI.ANSI_RED + "The password must contain 4 digits only and caracters different from numbers are not allowed!" + UI.ANSI_RESET);
+			throw new IllegalArgumentException("\t\t\t\tError: " + UI.ANSI_RED + "The password must contain 4 digits only and caracters different from numbers are not allowed!" + UI.ANSI_RESET);
 		}if(passwordString.length() > 4 || passwordString.length() < 4) {
-			throw new IllegalArgumentException("\t\t\tError: " + UI.ANSI_RED + "The password must contain 4 digits only." + UI.ANSI_RESET);
+			throw new IllegalArgumentException("\t\t\t\tError: " + UI.ANSI_RED + "The password must contain 4 digits only." + UI.ANSI_RESET);
 		}if(!OtherService.isNumber(passwordString)) {
-			throw new NumberFormatException("\t\t\tError: " + UI.ANSI_RED + "Caracters different from numbers are not allowed!" + UI.ANSI_RESET);
+			throw new NumberFormatException("\t\t\t\tError: " + UI.ANSI_RED + "Caracters different from numbers are not allowed!" + UI.ANSI_RESET);
 		}
 		return passwordString;
 	}

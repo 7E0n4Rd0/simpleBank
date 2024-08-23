@@ -43,17 +43,25 @@ public class Program {
 				if(OtherService.isNumber(n)) {
 					Short number = Short.parseShort(n);  
 					if(number > 4 || number <= 0) {
-						throw new IndexOutOfBoundsException("\t\t\tError: there is not an option for this number!\n\t\t\tpress enter key to try again");
+						throw new IndexOutOfBoundsException(UI.ANSI_YELLOW + "\t\t\t\tError: there is not an option for this number!" + UI.ANSI_RESET);
 					}
 					switch(number){
 					case 1:
 						if(!simpleBankDir.exists()) {
 							throw new InvalidOperationException("Something went wrong, couldn't find directory '/files'");
 						}
-						RegistrationService.registerAgency();
+						try {
+							RegistrationService.registerAgency();
+						} catch (InvalidDataException e) {
+							System.out.println(e.getMessage());
+						}
+						try {
+							Thread.sleep(3000);
+						}catch (InterruptedException i){
+							i.printStackTrace();
+						}
 						break;
 					case 2:
-						Random random = new Random();
 						if(!simpleBankDir.exists()) {
 							throw new InvalidOperationException("Something went wrong, couldn't find directory '/files'");
 						}
@@ -61,7 +69,11 @@ public class Program {
 						File file = new File(agencysPath);
 						Set<Agency> agencys = OtherService.loadAgencyList(file);
 						try (BufferedReader br = new BufferedReader(new FileReader(agencysPath))){
-							int randomAgency = random.nextInt(1, agencys.size());
+							Random random = new Random();
+							int randomAgency = 0;
+							if(agencys.size() > 1) {
+								randomAgency = random.nextInt(1, agencys.size());
+							}
 							int counter = 1;
 							Agency agencyChosed = null;
 							for(Agency agency : agencys) {
@@ -72,9 +84,14 @@ public class Program {
 							RegistrationService.registerAccount(agencyChosed);
 						}catch (InvalidDataException | IOException e){
 							System.out.println(e.getMessage());
+							try {
+								Thread.sleep(1000);
+							}catch (InterruptedException i){
+								i.printStackTrace();
+							}
 						}
 						if(!file.exists()) {
-							throw new FileNotFoundException("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file\n" + UI.ANSI_RESET);
+							throw new FileNotFoundException("\t\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file\n" + UI.ANSI_RESET);
 						}
 						break;
 					case 3:
@@ -85,7 +102,7 @@ public class Program {
 						String fileAccspath = "C:/simpleBank/files/accounts.csv";
 						File fileAccs = new File(fileAccspath);
 						if(!fileAccs.exists()) {
-							throw new FileNotFoundException("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the accounts.csv file\n" + UI.ANSI_RESET);
+							throw new FileNotFoundException("\t\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the accounts.csv file\n" + UI.ANSI_RESET);
 						}
 						Set<Account> listAcc = new HashSet<Account>();
 						try {
@@ -96,19 +113,24 @@ public class Program {
 						}
 						UI.printANSCIILogo();
 						String numberAcc = "", clientCPF = "";
-						System.out.println("\t\t\t"+UI.ANSI_GREEN+"Inform the account data"+UI.ANSI_RESET);
+						System.out.println("\t\t\t\t"+UI.ANSI_GREEN+"Inform the account data"+UI.ANSI_RESET);
 						while(true) {
-							System.out.print("\t\t\tNumber Account: ");
+							System.out.print("\t\t\t\tNumber Account: ");
 							try {
 								numberAcc = input.nextLine();
 								OtherService.isNumber(numberAcc);
 							}catch(NumberFormatException e) {
 								System.out.println(e.getMessage());
+								try {
+									Thread.sleep(1000);
+								}catch (InterruptedException i){
+									i.printStackTrace();
+								}
 							}
 							break;
 						}
 						while(true) {
-							System.out.print("\t\t\tClient CPF: ");
+							System.out.print("\t\t\t\tClient CPF: ");
 							try {
 								clientCPF = input.nextLine();
 								ValidationService.validateCPF(clientCPF);
@@ -124,9 +146,15 @@ public class Program {
 								throw new InvalidOperationException("Couldn't find the account!!");
 							}
 							while(true) {
-								System.out.print("\t\t\t"+UI.ANSI_RED+"[Destructive Action]"+UI.ANSI_RESET+
-										"Are you sure you want to delete the account "
-										+ "[" +"Number Account: "+innerNumberAcc +" CPF: "+ innerClientCPF+"] [Y/N]?\n\t\t\t"+UI.ANSI_YELLOW+">>>"+UI.ANSI_RESET);
+								System.out.print("\t\t\t\t"+UI.ANSI_RED+"[Destructive Action]"+UI.ANSI_RESET+
+										" Are you sure you want to delete the account "
+										+ "[" +"Number Account: "+innerNumberAcc +"; CPF: "+ innerClientCPF+"] [Y/N]?\n");
+								try {
+									Thread.sleep(2000);
+								}catch (InterruptedException i){
+									i.printStackTrace();
+								}
+								System.out.print("\t\t\t\t"+UI.ANSI_RED+">>>"+UI.ANSI_RESET);
 								String answer = input.nextLine().toUpperCase();
 								if(answer.charAt(0) == 'Y') {
 									listAcc.removeIf(x -> x.getNumberAccount().equals(innerNumberAcc) && x.getClient().getCpfClient().equals(innerClientCPF));
@@ -140,45 +168,97 @@ public class Program {
 									}catch(IOException e) {
 										System.out.println("Error: " + UI.ANSI_RED + e.getMessage() + UI.ANSI_RESET);
 									}
+									System.out.println("\t\t\t\t" + UI.ANSI_GREEN + "Account deleted with sucessfully!!" + UI.ANSI_RESET);
+									try {
+										Thread.sleep(3000);
+									}catch (InterruptedException i){
+										i.printStackTrace();
+									}
 									break;
 								}else if(answer.charAt(0) == 'N') {
-									System.out.println(UI.ANSI_YELLOW+">>> Returning to the main menu..."+UI.ANSI_RESET);
+									System.out.println(UI.ANSI_YELLOW+"\t\t\t\t>>> Returning to the main menu..."+UI.ANSI_RESET);
+									try {
+										Thread.sleep(3000);
+									}catch (InterruptedException i){
+										i.printStackTrace();
+									}
 									break;
 								}else {
-									System.out.print(UI.ANSI_RED+"\t\t\tError: there is not an option for this caracter!\n "+UI.ANSI_RESET);
+									System.out.print(UI.ANSI_RED+"\t\t\t\tError: there is not an option for this caracter!\n "+UI.ANSI_RESET);
+									try {
+										Thread.sleep(1000);
+									}catch (InterruptedException i){
+										i.printStackTrace();
+									}
 								}
 							}
 						}catch(InvalidOperationException | InvalidCPFExcpetion e) {
 							System.out.println(e.getMessage());
+							try {
+								Thread.sleep(2000);
+							}catch (InterruptedException i){
+								i.printStackTrace();
+							}
 						}
 						break;
 					case 4:
 						UI.clearScreen();
 						UI.printANSCIILogo();
-						System.out.println("\t\t\tBye Bye, have a nice day!!!");
+						System.out.println("\t\t\t\tBye Bye, have a nice day!!!");
+						Thread.sleep(3000);
 						break;
 					}	
+				}else if(n.toLowerCase().equals("linkin park") || n.toLowerCase().equals("meteora") || n.toLowerCase().equals("chester")) {
+					UI.clearScreen();
+					try {
+						UI.printLP();
+					}catch (InterruptedException e) {
+						System.out.println("\t\t\t\tThe user interrupted the LP moment, what a shame!! ⋋_⋌");
+					}
+					input.nextLine();
 				}else {
 					throw new InputMismatchException();
 				}
 				
 			}catch(InputMismatchException e) {
-				System.out.print("\t\t\tError: "+UI.ANSI_RED+"Caracters different from numbers are not allowed!."+UI.ANSI_RESET+"\n"
-						+ "\t\t\tpress enter key to try again");
+				System.out.print("\t\t\t\tError: "+UI.ANSI_RED+"Caracters different from numbers are not allowed!."+UI.ANSI_RESET+"\n"
+						+ "\t\t\t\tpress enter key to try again");
+				try {
+					Thread.sleep(1000);
+				}catch (InterruptedException i){
+					i.printStackTrace();
+				}
 				input.nextLine();
 			}catch(IndexOutOfBoundsException e) {
-				System.out.println(e.getMessage() + "\n\t\t\tpress enter key to try again");
+				System.out.println(e.getMessage() + "\n\t\t\t\tpress enter key to try again");
+				try {
+					Thread.sleep(1000);
+				}catch (InterruptedException i){
+					i.printStackTrace();
+				}
 				input.nextLine();
 			}catch(FileNotFoundException e) {
 				UI.clearScreen();
 				UI.printANSCIILogo();
-				System.out.println(e.getMessage() + "\n\t\t\tpress enter key to try again");
+				System.out.println(e.getMessage() + "\n\t\t\t\tpress enter key to try again");
+				try {
+					Thread.sleep(1000);
+				}catch (InterruptedException i){
+					i.printStackTrace();
+				}
 				input.nextLine();
 			} catch (InvalidOperationException e) {
 				UI.clearScreen();
 				UI.printANSCIILogo();
-				System.out.println(e.getMessage() + "\n\t\t\tpress enter key to try again");
+				System.out.println(e.getMessage() + "\n\t\t\t\tpress enter key to try again");
+				try {
+					Thread.sleep(1000);
+				}catch (InterruptedException i){
+					i.printStackTrace();
+				}
 				input.nextLine();
+			}catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 			UI.clearScreen();
 			if(n.equals("4")) {

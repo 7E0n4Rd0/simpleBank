@@ -23,16 +23,23 @@ public abstract class RegistrationService {
 	static Scanner input = new Scanner(System.in);
 	static Random random = new Random();
 	
-	public static Agency registerAgency() {
+	public static Agency registerAgency() throws InvalidDataException {
 		String agencyFilepath = "C:/simpleBank/files/agencys.csv";
 		UI.clearScreen();
 		UI.printANSCIILogo();
-		System.out.println("\t\t\tAgency Data");
-		String agencyCode = String.format("%04d", random.nextInt(1, 9999));
-		System.out.println("\t\t\tAgency code: "+UI.ANSI_GREEN+agencyCode+UI.ANSI_RESET);
-		System.out.print("\t\t\tAgency address: ");
+		System.out.println("\t\t\t\tAgency Data");
 		
+		String agencyCode = String.format("%04d", random.nextInt(1, 9999));
+		System.out.println("\t\t\t\tAgency code: "+UI.ANSI_GREEN+agencyCode+UI.ANSI_RESET);
+		System.out.print("\t\t\t\tAgency address: ");
 		String agencyAddress = input.nextLine();
+		
+		if(agencyAddress.startsWith("[0-9]")) {
+			throw new IllegalArgumentException("You can't start a adress with numbers!!");
+		}else if(!agencyAddress.matches("^(Rua|Avenida|Travessa|Praça|Alameda)\\s[\\w\\s]+,\\s?\\d+(\\s?\\-\\s?[\\w\\s]+)?\\s\\-"
+				+ "\\s[\\w\\s]+,\\s[\\w\\s]+,\\s[A-Z]{2},\\s\\d{5}-\\d{3}$\r\n")) { //Starts with G and ends with T 
+			throw new InvalidDataException("Invalid Adress");
+		}
 		
 		Agency agency = new Agency(agencyCode, agencyAddress);
 		
@@ -42,17 +49,18 @@ public abstract class RegistrationService {
 		}catch(IOException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
+		System.out.println("\t\t\t\t" + UI.ANSI_GREEN + "Agency created with sucessfully!!" + UI.ANSI_RESET);
 		return agency;
 	}
 	
 	protected static Client registerClient() {
 		UI.clearScreen();
 		UI.printANSCIILogo();
-		System.out.println("\n\t\t\t"+UI.ANSI_GREEN+"Client Data"+UI.ANSI_RESET);
+		System.out.println("\n\t\t\t\t"+UI.ANSI_GREEN+"Client Data"+UI.ANSI_RESET);
 		String clientName = "", clientCPF = "", clientPhoneNumber = "";
 		while(true) {
 			try {
-				System.out.print("\t\t\tClient First Name and Last Name: ");
+				System.out.print("\t\t\t\tClient First Name and Last Name: ");
 				clientName = FormatterService.formatName(input.nextLine().trim());
 				break;
 			}catch(InvalidNameException e) {
@@ -60,7 +68,7 @@ public abstract class RegistrationService {
 			}
 		}
 		while(true) {
-			System.out.print("\t\t\tClient CPF: ");
+			System.out.print("\t\t\t\tClient CPF: ");
 			try {
 				clientCPF = FormatterService.formatCPF(input.nextLine().trim());
 				break;
@@ -69,7 +77,7 @@ public abstract class RegistrationService {
 			}
 		}
 		while(true) {
-			System.out.print("\t\t\tClient Phone Number: ");
+			System.out.print("\t\t\t\tClient Phone Number: ");
 			try {
 				clientPhoneNumber = FormatterService.formatPhoneNumber(input.nextLine().trim());
 				break;
@@ -91,10 +99,10 @@ public abstract class RegistrationService {
 		UI.printANSCIILogo();
 		while(true) {
 			try {
-				System.out.println("\n\t\t\t"+UI.ANSI_GREEN+"Account Data"+UI.ANSI_RESET);
+				System.out.println("\n\t\t\t\t"+UI.ANSI_GREEN+"Account Data"+UI.ANSI_RESET);
 				numberAcc = String.format("%04d", random.nextInt(1, 9999));
-				System.out.println("\t\t\tNumber Account: " +UI.ANSI_GREEN+numberAcc+UI.ANSI_RESET);
-				System.out.print("\t\t\tAccount password: ");
+				System.out.println("\t\t\t\tNumber Account: " +UI.ANSI_GREEN+numberAcc+UI.ANSI_RESET);
+				System.out.print("\t\t\t\tAccount password: ");
 				password = input.nextLine();
 				ValidationService.validatePassword(password);
 				break;
@@ -131,6 +139,11 @@ public abstract class RegistrationService {
 		}
 		UI.clearScreen();
 		UI.printANSCIILogo();
-		System.out.println("\t\t\t" + UI.ANSI_GREEN + "Account created with sucessfully!!" + UI.ANSI_RESET);
+		System.out.println("\t\t\t\t" + UI.ANSI_GREEN + "Account created with sucessfully!!" + UI.ANSI_RESET);
+		try {
+			Thread.sleep(2000);
+		}catch (InterruptedException i){
+			i.printStackTrace();
+		}
 	}
 }
