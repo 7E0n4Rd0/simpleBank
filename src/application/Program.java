@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -49,32 +50,30 @@ public class Program {
 						if(!simpleBankDir.exists()) {
 							throw new InvalidOperationException("Something went wrong, couldn't find directory '/files'");
 						}
-						Agency agency = RegistrationService.registerAgency();
+						RegistrationService.registerAgency();
 						break;
 					case 2:
+						Random random = new Random();
 						if(!simpleBankDir.exists()) {
 							throw new InvalidOperationException("Something went wrong, couldn't find directory '/files'");
 						}
-
-						String path = "C:/simpleBank/files/agencys.csv";
-						File file = new File(path);
-						boolean fileExists = false;
-						try (BufferedReader br = new BufferedReader(new FileReader(path))){
-							if(!file.exists()) {
-								fileExists = false;
-								break;
+						String agencysPath = "C:/simpleBank/files/agencys.csv";
+						File file = new File(agencysPath);
+						Set<Agency> agencys = OtherService.loadAgencyList(file);
+						try (BufferedReader br = new BufferedReader(new FileReader(agencysPath))){
+							int randomAgency = random.nextInt(1, agencys.size());
+							int counter = 1;
+							Agency agencyChosed = null;
+							for(Agency agency : agencys) {
+								if(counter == randomAgency) {
+									agencyChosed = new Agency(agency.getAgencyCode(), agency.getAgencyAddress());
+								}
 							}
-							fileExists = true;
-							String line = br.readLine();
-							String[] fields = line.split(",");
-							RegistrationService.registerAccount(new Agency(fields[0], fields[1]));
-							
-						}catch (IOException e) {
-							System.out.println("Error: " + e.getMessage());
-						} catch (InvalidDataException e) {
+							RegistrationService.registerAccount(agencyChosed);
+						}catch (InvalidDataException | IOException e){
 							System.out.println(e.getMessage());
 						}
-						if(!fileExists) {
+						if(!file.exists()) {
 							throw new FileNotFoundException("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file\n" + UI.ANSI_RESET);
 						}
 						break;
@@ -97,7 +96,7 @@ public class Program {
 						}
 						UI.printANSCIILogo();
 						String numberAcc = "", clientCPF = "";
-						System.out.println(UI.ANSI_GREEN+"\t\t\tInform the account data"+UI.ANSI_RESET);
+						System.out.println("\t\t\t"+UI.ANSI_GREEN+"Inform the account data"+UI.ANSI_RESET);
 						while(true) {
 							System.out.print("\t\t\tNumber Account: ");
 							try {
@@ -126,7 +125,8 @@ public class Program {
 							}
 							while(true) {
 								System.out.print("\t\t\t"+UI.ANSI_RED+"[Destructive Action]"+UI.ANSI_RESET+
-										"Are you sure you want to delete the account [" +"Number Account: "+innerNumberAcc +" CPF: "+ innerClientCPF+"] [Y/N]?\n\t\t\t>>>");
+										"Are you sure you want to delete the account "
+										+ "[" +"Number Account: "+innerNumberAcc +" CPF: "+ innerClientCPF+"] [Y/N]?\n\t\t\t"+UI.ANSI_YELLOW+">>>"+UI.ANSI_RESET);
 								String answer = input.nextLine().toUpperCase();
 								if(answer.charAt(0) == 'Y') {
 									listAcc.removeIf(x -> x.getNumberAccount().equals(innerNumberAcc) && x.getClient().getCpfClient().equals(innerClientCPF));
@@ -142,10 +142,10 @@ public class Program {
 									}
 									break;
 								}else if(answer.charAt(0) == 'N') {
-									System.out.println(">>> Returning to the main menu...");
+									System.out.println(UI.ANSI_YELLOW+">>> Returning to the main menu..."+UI.ANSI_RESET);
 									break;
 								}else {
-									System.out.print("\t\t\tError: there is not an option for this caracter!\n ");
+									System.out.print(UI.ANSI_RED+"\t\t\tError: there is not an option for this caracter!\n "+UI.ANSI_RESET);
 								}
 							}
 						}catch(InvalidOperationException | InvalidCPFExcpetion e) {

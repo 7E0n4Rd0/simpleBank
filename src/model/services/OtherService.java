@@ -2,11 +2,9 @@ package model.services;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Scanner;
 import java.util.Set;
 
 import application.UI;
@@ -26,17 +24,16 @@ public abstract class OtherService {
 	}
 	
 	public static Set<Account> loadAccountList(File file) throws InvalidOperationException {
-		Scanner scanner = new Scanner(System.in);
-		StringBuilder sb = new StringBuilder();
 		String path = file.getAbsolutePath();
+		if(!file.exists()) {
+			try{
+				file.createNewFile();
+			}catch (IOException e){
+				e.printStackTrace();
+			}
+		}
 		try (BufferedReader br = new BufferedReader(new FileReader(path))){
-			if(!file.exists()) {
-				throw new FileNotFoundException();
-			}
 			String line = br.readLine();
-			if(line == null) {
-				throw new InvalidOperationException("Fatal Error: The file accounts.csv is null!!");
-			}
 			Set<Account> accounts = new HashSet<Account>();
 			while(line != null) {
 				String[] field = line.split(",");
@@ -49,25 +46,25 @@ public abstract class OtherService {
 				System.out.println("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the accounts.csv file" + UI.ANSI_RESET 
 						+ "\n \t\t\tpress enter key to try again");
 				return null;
+			}else {
+				System.out.println(e.getMessage());
 			}
-			System.out.println(e.getMessage());
 			return null;
 		}
 	}
 	public static Set<Agency> loadAgencyList(File file) throws InvalidOperationException {
-		Scanner scanner = new Scanner(System.in);
-		StringBuilder sb = new StringBuilder();
 		String path = file.getAbsolutePath();
+		if(!file.exists()) {
+			try{
+				file.createNewFile();
+			}catch (IOException e){
+				e.printStackTrace();
+			}
+		}
 		try (BufferedReader br = new BufferedReader(new FileReader(path))){
-			if(!file.exists()) {
-				throw new FileNotFoundException();
-			}
 			String line = br.readLine();
-			if(line == null) {
-				throw new NullPointerException("Fatal Error: The file agencys.csv is null!!");
-			}
 			Set<Agency> agencys = new HashSet<Agency>();
-			while(line != null) {
+			while(line != null && (!line.isBlank() || !line.isEmpty())) {
 				String[] field = line.split(",");
 				agencys.add(new Agency(field[0], field[1]));
 				line = br.readLine();
@@ -79,7 +76,6 @@ public abstract class OtherService {
 						+ "\n \t\t\tpress enter key to try again");
 				return null;
 			}
-			System.out.println(e.getMessage());
 			return null;
 		}
 	}

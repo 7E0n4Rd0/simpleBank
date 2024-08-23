@@ -28,14 +28,17 @@ public abstract class RegistrationService {
 		UI.clearScreen();
 		UI.printANSCIILogo();
 		System.out.println("\t\t\tAgency Data");
+		String agencyCode = String.format("%04d", random.nextInt(1, 9999));
+		System.out.println("\t\t\tAgency code: "+UI.ANSI_GREEN+agencyCode+UI.ANSI_RESET);
 		System.out.print("\t\t\tAgency address: ");
 		
 		String agencyAddress = input.nextLine();
-		String agencyCode = String.format("%04d", random.nextInt(1, 9999));
+		
 		Agency agency = new Agency(agencyCode, agencyAddress);
 		
-		try (BufferedWriter br = new BufferedWriter(new FileWriter(agencyFilepath))){
-			br.append(agency.getAgencyCode() +","+agency.getAgencyAddress());
+		try (BufferedWriter br = new BufferedWriter(new FileWriter(agencyFilepath, true))){
+			br.write(agency.getAgencyCode() +","+agency.getAgencyAddress());
+			br.newLine();
 		}catch(IOException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
@@ -90,6 +93,7 @@ public abstract class RegistrationService {
 			try {
 				System.out.println("\n\t\t\t"+UI.ANSI_GREEN+"Account Data"+UI.ANSI_RESET);
 				numberAcc = String.format("%04d", random.nextInt(1, 9999));
+				System.out.println("\t\t\tNumber Account: " +UI.ANSI_GREEN+numberAcc+UI.ANSI_RESET);
 				System.out.print("\t\t\tAccount password: ");
 				password = input.nextLine();
 				ValidationService.validatePassword(password);
@@ -105,21 +109,23 @@ public abstract class RegistrationService {
 		}catch(InvalidOperationException e) {
 			System.out.println(e.getMessage());
 		}
-		if(listAllAcc != null)
+		if(listAllAcc != null) {
 			for(Account acc : listAllAcc) {
-				if(acc.getAgencyCode().equals(agency.getAgencyCode())) {
+				if(acc.getAgencyCode().equals(agency.getAgencyCode()) && acc.getClient().getCpfClient().equals(client.getCpfClient())) {
 					agency.addAccount(acc);
 				}
 			}
+		}
 		if(agency.getAccountsList().contains(account)) {
 			throw new InvalidDataException("This account is already registered!!");
 		}
 		agency.addAccount(account);
 		try (BufferedWriter br = new BufferedWriter(new FileWriter(accsFilePath, true))){
-			br.append(account.getAgencyCode() + "," + account.getNumberAccount() + "," 
+			br.write(account.getAgencyCode() + "," + account.getNumberAccount() + "," 
 					+ account.getPasswordAccount() + "," + account.getBalance() + ","
 					+ account.getClient().getCpfClient() + "," + account.getClient().getNameClient() + ","
-					+ account.getClient().getPhoneNumberClient() + "\n");
+					+ account.getClient().getPhoneNumberClient());
+			br.newLine();
 		}catch(IOException e) {
 			System.out.println("Error: " + UI.ANSI_RED + e.getMessage() + UI.ANSI_RESET);
 		}

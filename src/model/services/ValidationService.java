@@ -5,7 +5,6 @@ import java.util.Set;
 import application.UI;
 import model.entities.Account;
 import model.excpetion.InvalidCPFExcpetion;
-import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidNameException;
 import model.excpetion.InvalidPhoneNumberException;
 
