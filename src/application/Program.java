@@ -73,6 +73,8 @@ public class Program {
 							int randomAgency = 0;
 							if(agencys.size() > 1) {
 								randomAgency = random.nextInt(1, agencys.size());
+							}else {
+								randomAgency = 1;
 							}
 							int counter = 1;
 							Agency agencyChosed = null;
@@ -82,7 +84,14 @@ public class Program {
 								}
 							}
 							RegistrationService.registerAccount(agencyChosed);
-						}catch (InvalidDataException | IOException e){
+						}catch (InvalidDataException e){
+							System.out.println(e.getMessage());
+							try {
+								Thread.sleep(1000);
+							}catch (InterruptedException i){
+								i.printStackTrace();
+							}
+						}catch (IOException e) {
 							System.out.println(e.getMessage());
 							try {
 								Thread.sleep(1000);
@@ -91,7 +100,7 @@ public class Program {
 							}
 						}
 						if(!file.exists()) {
-							throw new FileNotFoundException("\t\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file\n" + UI.ANSI_RESET);
+							throw new FileNotFoundException("\t\t\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file\n" + UI.ANSI_RESET);
 						}
 						break;
 					case 3:
@@ -102,7 +111,7 @@ public class Program {
 						String fileAccspath = "C:/simpleBank/files/accounts.csv";
 						File fileAccs = new File(fileAccspath);
 						if(!fileAccs.exists()) {
-							throw new FileNotFoundException("\t\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the accounts.csv file\n" + UI.ANSI_RESET);
+							throw new FileNotFoundException("\t\t\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the accounts.csv file\n" + UI.ANSI_RESET);
 						}
 						Set<Account> listAcc = new HashSet<Account>();
 						try {
@@ -113,12 +122,17 @@ public class Program {
 						}
 						UI.printANSCIILogo();
 						String numberAcc = "", clientCPF = "";
-						System.out.println("\t\t\t\t"+UI.ANSI_GREEN+"Inform the account data"+UI.ANSI_RESET);
+						System.out.println("\t\t\t\t\t"+UI.ANSI_GREEN+"Inform the account data"+UI.ANSI_RESET);
 						while(true) {
-							System.out.print("\t\t\t\tNumber Account: ");
+							System.out.print("\t\t\t\t\tNumber Account: ");
 							try {
 								numberAcc = input.nextLine();
 								OtherService.isNumber(numberAcc);
+								if(numberAcc.length() > 4 || numberAcc.length() < 4) {
+									throw new IllegalArgumentException(UI.ANSI_YELLOW+"\t\t\t\t\tThe Number Account is 4 digits only!!"+UI.ANSI_RESET);
+								}else {
+									break;
+								}
 							}catch(NumberFormatException e) {
 								System.out.println(e.getMessage());
 								try {
@@ -126,22 +140,29 @@ public class Program {
 								}catch (InterruptedException i){
 									i.printStackTrace();
 								}
+							}catch(IllegalArgumentException e) {
+								System.out.println(e.getMessage());
+								try {
+									Thread.sleep(1000);
+								}catch (InterruptedException i){
+									i.printStackTrace();
+								}
 							}
-							break;
 						}
 						while(true) {
-							System.out.print("\t\t\t\tClient CPF: ");
+							System.out.print("\t\t\t\t\tClient CPF: ");
 							try {
 								clientCPF = input.nextLine();
 								ValidationService.validateCPF(clientCPF);
+								clientCPF = FormatterService.formatCPF(clientCPF);
+								break;
 							}catch(InvalidCPFExcpetion e) {
 								System.out.println(e.getMessage());
 							}
-							break;
 						}
 						try {
 							final String innerNumberAcc = new String(numberAcc);
-							final String innerClientCPF = new String(FormatterService.formatCPF(clientCPF));
+							final String innerClientCPF = new String(clientCPF);
 							if(!ValidationService.validateAccount(listAcc, innerNumberAcc, innerClientCPF)) {
 								throw new InvalidOperationException("Couldn't find the account!!");
 							}
@@ -154,7 +175,7 @@ public class Program {
 								}catch (InterruptedException i){
 									i.printStackTrace();
 								}
-								System.out.print("\t\t\t\t"+UI.ANSI_RED+">>>"+UI.ANSI_RESET);
+								System.out.print("\t\t\t\t\t"+UI.ANSI_RED+">>> "+UI.ANSI_RESET);
 								String answer = input.nextLine().toUpperCase();
 								if(answer.charAt(0) == 'Y') {
 									listAcc.removeIf(x -> x.getNumberAccount().equals(innerNumberAcc) && x.getClient().getCpfClient().equals(innerClientCPF));
@@ -192,7 +213,7 @@ public class Program {
 									}
 								}
 							}
-						}catch(InvalidOperationException | InvalidCPFExcpetion e) {
+						}catch(InvalidOperationException e) {
 							System.out.println(e.getMessage());
 							try {
 								Thread.sleep(2000);

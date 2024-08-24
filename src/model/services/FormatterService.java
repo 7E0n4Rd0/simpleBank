@@ -15,6 +15,9 @@ public abstract class FormatterService {
 	}
 	
 	protected static String formatName(String name) throws InvalidNameException { // Affectionately nicknamed as 'title()' internally, 
+		if(name.length() <= 0) {
+			throw new InvalidNameException("The name cannot be blank or null!!");
+		}
 		String[] nameTrimed = name.split("\\s"); //because it is a method that is available in the snake 
 		String formatedName = "";						//and not available in this cup of coffee. I'd rather coffee than
 		for(int i = 0; i < nameTrimed.length; i++) {    //not braces programming language.  

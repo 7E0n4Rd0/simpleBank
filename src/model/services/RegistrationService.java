@@ -36,8 +36,7 @@ public abstract class RegistrationService {
 		
 		if(agencyAddress.startsWith("[0-9]")) {
 			throw new IllegalArgumentException("You can't start a adress with numbers!!");
-		}else if(!agencyAddress.matches("^(Rua|Avenida|Travessa|Praça|Alameda)\\s[\\w\\s]+,\\s?\\d+(\\s?\\-\\s?[\\w\\s]+)?\\s\\-"
-				+ "\\s[\\w\\s]+,\\s[\\w\\s]+,\\s[A-Z]{2},\\s\\d{5}-\\d{3}$\r\n")) { //Starts with G and ends with T 
+		}else if(agencyAddress.isBlank() || agencyAddress.isEmpty()) {   
 			throw new InvalidDataException("Invalid Adress");
 		}
 		
@@ -97,20 +96,8 @@ public abstract class RegistrationService {
 		String password = "";
 		UI.clearScreen();
 		UI.printANSCIILogo();
-		while(true) {
-			try {
-				System.out.println("\n\t\t\t\t"+UI.ANSI_GREEN+"Account Data"+UI.ANSI_RESET);
-				numberAcc = String.format("%04d", random.nextInt(1, 9999));
-				System.out.println("\t\t\t\tNumber Account: " +UI.ANSI_GREEN+numberAcc+UI.ANSI_RESET);
-				System.out.print("\t\t\t\tAccount password: ");
-				password = input.nextLine();
-				ValidationService.validatePassword(password);
-				break;
-			}catch(IllegalArgumentException e) {
-				System.out.println(e.getMessage());
-			}
-		}
-		Account account = new Account(agency.getAgencyCode(), numberAcc, password, client);
+
+		System.out.println("\n\t\t\t\t"+UI.ANSI_GREEN+"Account Data"+UI.ANSI_RESET);
 		Set<Account> listAllAcc = new HashSet<>();
 		try{
 			listAllAcc = OtherService.loadAccountList(new File(accsFilePath));
@@ -124,15 +111,37 @@ public abstract class RegistrationService {
 				}
 			}
 		}
-		if(agency.getAccountsList().contains(account)) {
-			throw new InvalidDataException("This account is already registered!!");
+		while(true) {
+			numberAcc = String.format("%04d", random.nextInt(1, 9999));
+			for(Account acc : agency.getAccountsList()) {
+				if(numberAcc.equals(acc.getNumberAccount())) {
+					numberAcc = String.format("%04d", random.nextInt(1, 9999));
+				}
+			}
+			break;
 		}
-		agency.addAccount(account);
+		System.out.println("\t\t\t\tNumber Account: " +UI.ANSI_GREEN+numberAcc+UI.ANSI_RESET);
+		while(true) {
+			try {
+				System.out.print("\t\t\t\tAccount password: ");
+				password = input.nextLine();
+				ValidationService.validatePassword(password);
+				break;
+			}catch(IllegalArgumentException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
+		Account newAccount = new Account(agency.getAgencyCode(), numberAcc, password, client);
+		if(agency.getAccountsList().contains(newAccount)) {
+			throw new InvalidDataException("This newAccount is already registered!!");
+		}
+		agency.addAccount(newAccount);
 		try (BufferedWriter br = new BufferedWriter(new FileWriter(accsFilePath, true))){
-			br.write(account.getAgencyCode() + "," + account.getNumberAccount() + "," 
-					+ account.getPasswordAccount() + "," + account.getBalance() + ","
-					+ account.getClient().getCpfClient() + "," + account.getClient().getNameClient() + ","
-					+ account.getClient().getPhoneNumberClient());
+			br.write(newAccount.getAgencyCode() + "," + newAccount.getNumberAccount() + "," 
+					+ newAccount.getPasswordAccount() + "," + newAccount.getBalance() + ","
+					+ newAccount.getClient().getCpfClient() + "," + newAccount.getClient().getNameClient() + ","
+					+ newAccount.getClient().getPhoneNumberClient());
 			br.newLine();
 		}catch(IOException e) {
 			System.out.println("Error: " + UI.ANSI_RED + e.getMessage() + UI.ANSI_RESET);
