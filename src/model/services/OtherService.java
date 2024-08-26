@@ -2,6 +2,7 @@ package model.services;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
@@ -11,7 +12,7 @@ import application.UI;
 import model.entities.Account;
 import model.entities.Agency;
 import model.entities.Client;
-import model.excpetion.InvalidOperationException;
+import model.excpetion.InvalidDataException;
 
 public abstract class OtherService {
 	public static boolean isNumber(String string){
@@ -23,15 +24,17 @@ public abstract class OtherService {
 		return true;
 	}
 	
-	public static Set<Account> loadAccountList(File file) throws InvalidOperationException {
-		String path = file.getAbsolutePath();
-		if(!file.exists()) {
-			try{
-				file.createNewFile();
-			}catch (IOException e){
-				e.printStackTrace();
+	public static boolean findAccount(Set<Account> accounts, String numberAcc, String cpfClient){
+		for(Account acc : accounts) {
+			if(acc.getNumberAccount().contains(numberAcc) && acc.getClient().getCpfClient().contains(cpfClient)) {
+				return true;
 			}
 		}
+		return false;
+	}
+	
+	public static Set<Account> loadAccountList(File file) throws FileNotFoundException{
+		String path = file.getAbsolutePath();
 		try (BufferedReader br = new BufferedReader(new FileReader(path))){
 			String line = br.readLine();
 			Set<Account> accounts = new HashSet<Account>();
@@ -43,16 +46,15 @@ public abstract class OtherService {
 			return accounts;
 		}catch(IOException e) {
 			if(e.getClass().getClasses().toString().equals("FileNotFoundException")) {
-				System.out.println("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the accounts.csv file" + UI.ANSI_RESET 
+				throw new FileNotFoundException("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file" + UI.ANSI_RESET 
 						+ "\n \t\t\tpress enter key to try again");
-				return null;
 			}else {
 				System.out.println(e.getMessage());
 			}
 			return null;
 		}
 	}
-	public static Set<Agency> loadAgencyList(File file) throws InvalidOperationException {
+	public static Set<Agency> loadAgencyList(File file) throws InvalidDataException, FileNotFoundException {
 		String path = file.getAbsolutePath();
 		if(!file.exists()) {
 			try{
@@ -72,9 +74,8 @@ public abstract class OtherService {
 			return agencys;
 		}catch(IOException e) {
 			if(e.getClass().getClasses().toString().equals("FileNotFoundException")) {
-				System.out.println("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file" + UI.ANSI_RESET 
+				throw new FileNotFoundException("\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file" + UI.ANSI_RESET 
 						+ "\n \t\t\tpress enter key to try again");
-				return null;
 			}
 			return null;
 		}

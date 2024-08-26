@@ -2,6 +2,7 @@ package model.services;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
@@ -23,25 +24,49 @@ public abstract class RegistrationService {
 	static Scanner input = new Scanner(System.in);
 	static Random random = new Random();
 	
-	public static Agency registerAgency() throws InvalidDataException {
+	public static Agency registerAgency(){
 		String agencyFilepath = "C:/simpleBank/files/agencys.csv";
 		UI.clearScreen();
 		UI.printANSCIILogo();
 		System.out.println("\t\t\t\tAgency Data");
 		
 		String agencyCode = String.format("%04d", random.nextInt(1, 9999));
-		System.out.println("\t\t\t\tAgency code: "+UI.ANSI_GREEN+agencyCode+UI.ANSI_RESET);
-		System.out.print("\t\t\t\tAgency address: ");
-		String agencyAddress = input.nextLine();
-		
-		if(agencyAddress.startsWith("[0-9]")) {
-			throw new IllegalArgumentException("You can't start a adress with numbers!!");
-		}else if(agencyAddress.isBlank() || agencyAddress.isEmpty()) {   
-			throw new InvalidDataException("Invalid Adress");
+		String agencyAddress = "";
+		while(true) { 
+			UI.clearScreen();
+			UI.printANSCIILogo();
+			System.out.println("\t\t\t\tAgency Data");
+			System.out.println("\t\t\t\tAgency code: "+UI.ANSI_GREEN+agencyCode+UI.ANSI_RESET);
+			System.out.print("\t\t\t\tAgency address: ");
+			agencyAddress = input.nextLine().toUpperCase();
+			try {
+				if(ValidationService.validateAgency(new File(agencyFilepath), new Agency(agencyCode, agencyAddress))) {
+					break;
+				}
+			}catch(InvalidDataException e) {
+				System.out.println(e.getMessage());
+				try {
+					Thread.sleep(2000);
+				}catch (InterruptedException i){
+					i.printStackTrace();
+				}
+			}catch(InvalidOperationException e) {
+				System.out.println(e.getMessage());
+				try {
+					Thread.sleep(2000);
+				}catch (InterruptedException i){
+					i.printStackTrace();
+				}
+			}catch(FileNotFoundException e) {
+				System.out.println(e.getMessage());
+				try {
+					Thread.sleep(2000);
+				}catch (InterruptedException i){
+					i.printStackTrace();
+				}
+			}
 		}
-		
-		Agency agency = new Agency(agencyCode, agencyAddress);
-		
+		Agency agency = new Agency(agencyCode, agencyAddress.toUpperCase());
 		try (BufferedWriter br = new BufferedWriter(new FileWriter(agencyFilepath, true))){
 			br.write(agency.getAgencyCode() +","+agency.getAgencyAddress());
 			br.newLine();
@@ -91,17 +116,25 @@ public abstract class RegistrationService {
 	
 	public static void registerAccount(Agency agency) throws InvalidDataException {
 		String accsFilePath = "C:/simpleBank/files/accounts.csv";
+		File accsFile = new File(accsFilePath);
 		Client client = registerClient();
 		String numberAcc = "";
 		String password = "";
+		if(!accsFile.exists()) {
+			try{
+				accsFile.createNewFile();
+			}catch (IOException e){
+				e.printStackTrace();
+			}
+		}
 		UI.clearScreen();
 		UI.printANSCIILogo();
 
 		System.out.println("\n\t\t\t\t"+UI.ANSI_GREEN+"Account Data"+UI.ANSI_RESET);
 		Set<Account> listAllAcc = new HashSet<>();
-		try{
-			listAllAcc = OtherService.loadAccountList(new File(accsFilePath));
-		}catch(InvalidOperationException e) {
+		try {
+			listAllAcc = OtherService.loadAccountList(accsFile);
+		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
 		if(listAllAcc != null) {
@@ -134,7 +167,7 @@ public abstract class RegistrationService {
 		
 		Account newAccount = new Account(agency.getAgencyCode(), numberAcc, password, client);
 		if(agency.getAccountsList().contains(newAccount)) {
-			throw new InvalidDataException("This newAccount is already registered!!");
+			throw new InvalidDataException("This Account is already registered!!");
 		}
 		agency.addAccount(newAccount);
 		try (BufferedWriter br = new BufferedWriter(new FileWriter(accsFilePath, true))){

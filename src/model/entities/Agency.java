@@ -1,6 +1,7 @@
 package model.entities;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Agency {
@@ -37,6 +38,23 @@ public class Agency {
 		return accounts;
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(agencyAddress, agencyCode);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Agency other = (Agency) obj;
+		return Objects.equals(agencyAddress, other.agencyAddress) && Objects.equals(agencyCode, other.agencyCode);
+	}
+
 	@Override
 	public String toString() {
 		return " Agency code: " + String.format("%03d", getAgencyCode()) + 

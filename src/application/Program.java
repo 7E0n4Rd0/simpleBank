@@ -50,11 +50,7 @@ public class Program {
 						if(!simpleBankDir.exists()) {
 							throw new InvalidOperationException("Something went wrong, couldn't find directory '/files'");
 						}
-						try {
-							RegistrationService.registerAgency();
-						} catch (InvalidDataException e) {
-							System.out.println(e.getMessage());
-						}
+						RegistrationService.registerAgency();
 						try {
 							Thread.sleep(3000);
 						}catch (InterruptedException i){
@@ -65,10 +61,8 @@ public class Program {
 						if(!simpleBankDir.exists()) {
 							throw new InvalidOperationException("Something went wrong, couldn't find directory '/files'");
 						}
-						String agencysPath = "C:/simpleBank/files/agencys.csv";
-						File file = new File(agencysPath);
-						Set<Agency> agencys = OtherService.loadAgencyList(file);
-						try (BufferedReader br = new BufferedReader(new FileReader(agencysPath))){
+						Set<Agency> agencys = OtherService.loadAgencyList(new File("C:/simpleBank/files/agencys.csv"));
+						try (BufferedReader br = new BufferedReader(new FileReader("C:/simpleBank/files/agencys.csv"))){
 							Random random = new Random();
 							int randomAgency = 0;
 							if(agencys.size() > 1) {
@@ -99,9 +93,6 @@ public class Program {
 								i.printStackTrace();
 							}
 						}
-						if(!file.exists()) {
-							throw new FileNotFoundException("\t\t\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the agencys.csv file\n" + UI.ANSI_RESET);
-						}
 						break;
 					case 3:
 						UI.clearScreen();
@@ -114,12 +105,7 @@ public class Program {
 							throw new FileNotFoundException("\t\t\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the accounts.csv file\n" + UI.ANSI_RESET);
 						}
 						Set<Account> listAcc = new HashSet<Account>();
-						try {
-							listAcc.addAll(OtherService.loadAccountList(fileAccs));
-						}catch(InvalidOperationException e) {
-							System.out.println(e.getMessage());
-							break;
-						}
+						listAcc.addAll(OtherService.loadAccountList(fileAccs));
 						UI.printANSCIILogo();
 						String numberAcc = "", clientCPF = "";
 						System.out.println("\t\t\t\t\t"+UI.ANSI_GREEN+"Inform the account data"+UI.ANSI_RESET);
@@ -163,7 +149,7 @@ public class Program {
 						try {
 							final String innerNumberAcc = new String(numberAcc);
 							final String innerClientCPF = new String(clientCPF);
-							if(!ValidationService.validateAccount(listAcc, innerNumberAcc, innerClientCPF)) {
+							if(!OtherService.findAccount(listAcc, innerNumberAcc, innerClientCPF)) {
 								throw new InvalidOperationException("Couldn't find the account!!");
 							}
 							while(true) {
@@ -280,6 +266,8 @@ public class Program {
 				input.nextLine();
 			}catch (InterruptedException e) {
 				e.printStackTrace();
+			}catch (InvalidDataException e) {
+				System.out.println(e.getMessage());
 			}
 			UI.clearScreen();
 			if(n.equals("4")) {

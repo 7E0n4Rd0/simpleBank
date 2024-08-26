@@ -1,11 +1,15 @@
 package model.services;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Set;
 
 import application.UI;
-import model.entities.Account;
+import model.entities.Agency;
 import model.excpetion.InvalidCPFExcpetion;
+import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidNameException;
+import model.excpetion.InvalidOperationException;
 import model.excpetion.InvalidPhoneNumberException;
 
 public abstract class ValidationService {
@@ -47,13 +51,18 @@ public abstract class ValidationService {
 	 	}
 	}
 	
-	public static boolean validateAccount(Set<Account> accounts, String numberAcc, String cpfClient){
-		boolean founded = false;
-		for(Account acc : accounts) {
-			if(acc.getNumberAccount().contains(numberAcc) && acc.getClient().getCpfClient().contains(cpfClient)) {
-				founded = true;
+	public static boolean validateAgency(File agencyFile, Agency agency) throws InvalidDataException, FileNotFoundException, InvalidOperationException {
+		if(agency.getAgencyAddress().startsWith("[0-9]")) {
+			throw new IllegalArgumentException("You can't start a adress with numbers!!");
+		}else if(agency.getAgencyAddress().isBlank() || agency.getAgencyAddress().isEmpty()) {   
+			throw new InvalidDataException("Invalid Adress");
+		}
+		Set<Agency> agencys = OtherService.loadAgencyList(agencyFile);
+		for(Agency ag : agencys) {
+			if(ag.getAgencyCode().equals(agency.getAgencyCode()) || ag.getAgencyAddress().equals(agency.getAgencyAddress())) {
+				throw new InvalidOperationException("Cannot register an agency on the same address already!");
 			}
 		}
-		return founded;
+		return true;
 	}
 }
