@@ -67,8 +67,10 @@ public class Program {
 							int randomAgency = 0;
 							if(agencys.size() > 1) {
 								randomAgency = random.nextInt(1, agencys.size());
-							}else {
+							}else if(agencys.size() == 1) {
 								randomAgency = 1;
+							}else {
+								throw new InvalidOperationException("You can't create an account without an agency registered!!!");
 							}
 							int counter = 1;
 							Agency agencyChosed = null;
