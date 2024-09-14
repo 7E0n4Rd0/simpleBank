@@ -19,10 +19,10 @@ import model.entities.Agency;
 import model.excpetion.InvalidCPFExcpetion;
 import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidOperationException;
-import model.services.FormatterService;
 import model.services.OtherService;
 import model.services.RegistrationService;
 import model.services.ValidationService;
+import model.util.Formatter;
 
 public class Program {
 	
@@ -142,7 +142,7 @@ public class Program {
 							try {
 								clientCPF = input.nextLine();
 								ValidationService.validateCPF(clientCPF);
-								clientCPF = FormatterService.formatCPF(clientCPF);
+								clientCPF = Formatter.formatCPF(clientCPF);
 								break;
 							}catch(InvalidCPFExcpetion e) {
 								System.out.println(e.getMessage());

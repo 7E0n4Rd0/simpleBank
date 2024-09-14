@@ -1,10 +1,11 @@
-package model.services;
+package model.util;
 
 import model.excpetion.InvalidCPFExcpetion;
 import model.excpetion.InvalidNameException;
 import model.excpetion.InvalidPhoneNumberException;
+import model.services.ValidationService;
 
-public abstract class FormatterService {
+public abstract class Formatter {
 	public static String formatCPF(String cpf) throws InvalidCPFExcpetion {
 		ValidationService.validateCPF(cpf);
 		StringBuilder sb = new StringBuilder();
@@ -14,7 +15,7 @@ public abstract class FormatterService {
 		return cpf;
 	}
 	
-	protected static String formatName(String name) throws InvalidNameException { // Affectionately nicknamed as 'title()' internally, 
+	public static String formatName(String name) throws InvalidNameException { // Affectionately nicknamed as 'title()' internally, 
 		if(name.length() <= 0) {
 			throw new InvalidNameException("The name cannot be blank or null!!");
 		}
@@ -29,7 +30,7 @@ public abstract class FormatterService {
 		return name;
 	}
 	
-	protected static String formatPhoneNumber(String phoneNumber) throws InvalidPhoneNumberException{
+	public static String formatPhoneNumber(String phoneNumber) throws InvalidPhoneNumberException{
  		ValidationService.validatePhoneNumber(phoneNumber);
 		StringBuilder sb = new StringBuilder();
 		if(phoneNumber.length() == 10) {

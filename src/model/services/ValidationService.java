@@ -31,7 +31,7 @@ public abstract class ValidationService {
 		}
 	}
 	
-	protected static void validateName(String name) throws InvalidNameException {
+	public static void validateName(String name) throws InvalidNameException {
 		if(!name.matches("^(?:[\\p{Lu}&&[\\p{IsLatin}]])(?:(?:')?" //I just copied this from stackoverflow. I couldn't do all
 				+ "(?:[\\p{Ll}&&[\\p{IsLatin}]]))+(?:\\-(?:[\\p{Lu}&&[\\p{IsLatin}]])(?:(?:')?(?:[\\p{Ll}&&" //this.
 				+ "[\\p{IsLatin}]]))+)*(?: (?:(?:e|y|de(?:(?: la| las| lo| los))?|do|dos|da|das|del|van|von|bin|le) )?" 
@@ -44,7 +44,7 @@ public abstract class ValidationService {
 		}
 	}
 	
-	protected static void validatePhoneNumber(String phoneNumber) throws InvalidPhoneNumberException{
+	public static void validatePhoneNumber(String phoneNumber) throws InvalidPhoneNumberException{
 		if(!phoneNumber.matches("^[(]?[1-9]{2}[)]? ?(?:[2-8]|9[\\d])\\d{3}[-]?\\d{4}$") 
 			|| phoneNumber.isBlank() || phoneNumber.isEmpty()){
 			throw new InvalidPhoneNumberException("Invalid Phone number. Example: 31 95555-5555");

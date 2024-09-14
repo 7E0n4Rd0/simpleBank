@@ -19,6 +19,7 @@ import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidNameException;
 import model.excpetion.InvalidOperationException;
 import model.excpetion.InvalidPhoneNumberException;
+import model.util.Formatter;
 
 public abstract class RegistrationService {
 	static Scanner input = new Scanner(System.in);
@@ -85,7 +86,7 @@ public abstract class RegistrationService {
 		while(true) {
 			try {
 				System.out.print("\t\t\t\tClient First Name and Last Name: ");
-				clientName = FormatterService.formatName(input.nextLine().trim());
+				clientName = Formatter.formatName(input.nextLine().trim());
 				break;
 			}catch(InvalidNameException e) {
 				System.out.println(e.getMessage());
@@ -94,7 +95,7 @@ public abstract class RegistrationService {
 		while(true) {
 			System.out.print("\t\t\t\tClient CPF: ");
 			try {
-				clientCPF = FormatterService.formatCPF(input.nextLine().trim());
+				clientCPF = Formatter.formatCPF(input.nextLine().trim());
 				break;
 			}catch(InvalidCPFExcpetion e) {
 				System.out.println(e.getMessage());
@@ -103,7 +104,7 @@ public abstract class RegistrationService {
 		while(true) {
 			System.out.print("\t\t\t\tClient Phone Number: ");
 			try {
-				clientPhoneNumber = FormatterService.formatPhoneNumber(input.nextLine().trim());
+				clientPhoneNumber = Formatter.formatPhoneNumber(input.nextLine().trim());
 				break;
 			}catch(InvalidPhoneNumberException e) {
 				System.out.println(e.getMessage());
