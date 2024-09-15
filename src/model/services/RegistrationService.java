@@ -25,6 +25,10 @@ public abstract class RegistrationService {
 	static Scanner input = new Scanner(System.in);
 	static Random random = new Random();
 	
+	/**
+	 * Register an new Agency with the input data from the user.
+	 * @return An instance of Agency;
+	 */
 	public static Agency registerAgency(){
 		String agencyFilepath = "C:/simpleBank/files/agencys.csv";
 		UI.clearScreen();
@@ -77,7 +81,10 @@ public abstract class RegistrationService {
 		System.out.println("\t\t\t\t" + UI.ANSI_GREEN + "Agency created with sucessfully!!" + UI.ANSI_RESET);
 		return agency;
 	}
-	
+	/**
+	 * Register a new Client.
+	 * @return An instance of Client;
+	 */
 	protected static Client registerClient() {
 		UI.clearScreen();
 		UI.printANSCIILogo();
@@ -114,7 +121,11 @@ public abstract class RegistrationService {
 		return client;
 	
 	}
-	
+	/**
+	 * Register a new Account with the client data. 
+	 * @param agency - to get the agency code on the new account;
+	 * @throws InvalidDataException - If an object of Account is equal with a account already registered.
+	 */
 	public static void registerAccount(Agency agency) throws InvalidDataException {
 		String accsFilePath = "C:/simpleBank/files/accounts.csv";
 		File accsFile = new File(accsFilePath);

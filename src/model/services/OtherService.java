@@ -12,18 +12,28 @@ import application.UI;
 import model.entities.Account;
 import model.entities.Agency;
 import model.entities.Client;
-import model.excpetion.InvalidDataException;
 
 public abstract class OtherService {
-	public static boolean isNumber(String string){
+	/**
+	 * Check if the number in string is a number or not.
+	 * @param number - Number in String
+	 * @return true if is a number, false if is not.
+	 */
+	public static boolean isNumber(String number){
 		try {
-			Integer.parseInt(string);
+			Integer.parseInt(number);
 		}catch(NumberFormatException e) {
 			return false;
 		}
 		return true;
 	}
-	
+	/**
+	 * Search an account on the accounts set with the number account and CPF client informed.  
+	 * @param accounts - set of accounts;
+	 * @param numberAcc - number account;
+	 * @param cpfClient - CPF of the client.
+	 * @return true if found, false if not found
+	 */
 	public static boolean findAccount(Set<Account> accounts, String numberAcc, String cpfClient){
 		for(Account acc : accounts) {
 			if(acc.getNumberAccount().contains(numberAcc) && acc.getClient().getCpfClient().contains(cpfClient)) {
@@ -32,7 +42,12 @@ public abstract class OtherService {
 		}
 		return false;
 	}
-	
+	/**
+	 * It reads a file for accounts and return a set of accounts. 
+	 * @param file - Account file with a list of accounts registered;
+	 * @return Set<Account> accounts;
+	 * @throws FileNotFoundException
+	 */
 	public static Set<Account> loadAccountList(File file) throws FileNotFoundException{
 		String path = file.getAbsolutePath();
 		try (BufferedReader br = new BufferedReader(new FileReader(path))){
@@ -54,7 +69,14 @@ public abstract class OtherService {
 			return null;
 		}
 	}
-	public static Set<Agency> loadAgencyList(File file) throws InvalidDataException, FileNotFoundException {
+	/**
+	 * 
+	 * It reads a file for agencys and return a set of agencys. 
+	 * @param file - Agency file with a list of agencys registered;
+	 * @return Set<Account> agencys;
+	 * @throws FileNotFoundException
+	 */
+	public static Set<Agency> loadAgencyList(File file) throws FileNotFoundException {
 		String path = file.getAbsolutePath();
 		if(!file.exists()) {
 			try{

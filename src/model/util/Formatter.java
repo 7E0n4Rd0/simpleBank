@@ -6,6 +6,12 @@ import model.excpetion.InvalidPhoneNumberException;
 import model.services.ValidationService;
 
 public abstract class Formatter {
+	/**
+	 * Format a CPF string in the structure: 000.000.000-00.
+	 * @param cpf - Client CPF;
+	 * @return cpf with the new format;
+	 * @throws InvalidCPFExcpetion If something happens in validateCPF();
+	 */
 	public static String formatCPF(String cpf) throws InvalidCPFExcpetion {
 		ValidationService.validateCPF(cpf);
 		StringBuilder sb = new StringBuilder();
@@ -14,7 +20,12 @@ public abstract class Formatter {
 		cpf = sb.toString();
 		return cpf;
 	}
-	
+	/**
+	 * Format the client full name with the first letter in each name in upper case.
+	 * @param name client name;
+	 * @return The client name with the new format;
+	 * @throws InvalidNameException If something happens during the validateName() or the name length is less than zero.
+	 */
 	public static String formatName(String name) throws InvalidNameException { // Affectionately nicknamed as 'title()' internally, 
 		if(name.length() <= 0) {
 			throw new InvalidNameException("The name cannot be blank or null!!");
@@ -29,7 +40,12 @@ public abstract class Formatter {
 		ValidationService.validateName(name);
 		return name;
 	}
-	
+	/**
+	 * Format the phone number in the structure: (00) 00000-0000.
+	 * @param phoneNumber Client phone number;
+	 * @return the phone number formated;
+	 * @throws InvalidPhoneNumberException If something happens during the validatePhoneNumber().
+	 */
 	public static String formatPhoneNumber(String phoneNumber) throws InvalidPhoneNumberException{
  		ValidationService.validatePhoneNumber(phoneNumber);
 		StringBuilder sb = new StringBuilder();
@@ -42,8 +58,6 @@ public abstract class Formatter {
 		    + "-" + phoneNumber.substring(7, 11));
 		    phoneNumber = sb.toString();
 		}
-	    
 	    return phoneNumber;
 	}
-	
 }

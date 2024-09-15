@@ -268,8 +268,6 @@ public class Program {
 				input.nextLine();
 			}catch (InterruptedException e) {
 				e.printStackTrace();
-			}catch (InvalidDataException e) {
-				System.out.println(e.getMessage());
 			}
 			UI.clearScreen();
 			if(n.equals("4")) {
