@@ -19,10 +19,10 @@ import model.entities.Agency;
 import model.excpetion.InvalidCPFExcpetion;
 import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidOperationException;
-import model.services.OtherService;
 import model.services.RegistrationService;
 import model.services.ValidationService;
-import model.util.Formatter;
+import model.util.Utils;
+import model.util.Utils;
 
 public class Program {
 	
@@ -40,7 +40,7 @@ public class Program {
 				UI.clearScreen();
 				UI.mainMenu();
 				n = input.nextLine();
-				if(OtherService.isNumber(n)) {
+				if(Utils.isNumber(n)) {
 					Short number = Short.parseShort(n);  
 					if(number > 4 || number <= 0) {
 						throw new IndexOutOfBoundsException(UI.ANSI_YELLOW + "\t\t\t\tError: there is not an option for this number!" + UI.ANSI_RESET);
@@ -61,7 +61,7 @@ public class Program {
 						if(!simpleBankDir.exists()) {
 							throw new InvalidOperationException("Something went wrong, couldn't find directory '/files'");
 						}
-						Set<Agency> agencys = OtherService.loadAgencyList(new File("C:/simpleBank/files/agencys.csv"));
+						Set<Agency> agencys = Utils.loadAgencyList(new File("C:/simpleBank/files/agencys.csv"));
 						try (BufferedReader br = new BufferedReader(new FileReader("C:/simpleBank/files/agencys.csv"))){
 							Random random = new Random();
 							int randomAgency = 0;
@@ -107,7 +107,7 @@ public class Program {
 							throw new FileNotFoundException("\t\t\t\t\t" + UI.ANSI_RED + "Fatal Error: Couldn't found the accounts.csv file\n" + UI.ANSI_RESET);
 						}
 						Set<Account> listAcc = new HashSet<Account>();
-						listAcc.addAll(OtherService.loadAccountList(fileAccs));
+						listAcc.addAll(Utils.loadAccountList(fileAccs));
 						UI.printANSCIILogo();
 						String numberAcc = "", clientCPF = "";
 						System.out.println("\t\t\t\t\t"+UI.ANSI_GREEN+"Inform the account data"+UI.ANSI_RESET);
@@ -115,7 +115,7 @@ public class Program {
 							System.out.print("\t\t\t\t\tNumber Account: ");
 							try {
 								numberAcc = input.nextLine();
-								OtherService.isNumber(numberAcc);
+								Utils.isNumber(numberAcc);
 								if(numberAcc.length() > 4 || numberAcc.length() < 4) {
 									throw new IllegalArgumentException(UI.ANSI_YELLOW+"\t\t\t\t\tThe Number Account is 4 digits only!!"+UI.ANSI_RESET);
 								}else {
@@ -142,7 +142,7 @@ public class Program {
 							try {
 								clientCPF = input.nextLine();
 								ValidationService.validateCPF(clientCPF);
-								clientCPF = Formatter.formatCPF(clientCPF);
+								clientCPF = Utils.formatCPF(clientCPF);
 								break;
 							}catch(InvalidCPFExcpetion e) {
 								System.out.println(e.getMessage());
@@ -151,7 +151,7 @@ public class Program {
 						try {
 							final String innerNumberAcc = new String(numberAcc);
 							final String innerClientCPF = new String(clientCPF);
-							if(!OtherService.findAccount(listAcc, innerNumberAcc, innerClientCPF)) {
+							if(!Utils.findAccount(listAcc, innerNumberAcc, innerClientCPF)) {
 								throw new InvalidOperationException("Couldn't find the account!!");
 							}
 							while(true) {

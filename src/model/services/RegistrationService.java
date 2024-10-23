@@ -19,7 +19,8 @@ import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidNameException;
 import model.excpetion.InvalidOperationException;
 import model.excpetion.InvalidPhoneNumberException;
-import model.util.Formatter;
+import model.util.Utils;
+import model.util.Utils;
 
 public abstract class RegistrationService {
 	static Scanner input = new Scanner(System.in);
@@ -93,7 +94,7 @@ public abstract class RegistrationService {
 		while(true) {
 			try {
 				System.out.print("\t\t\t\tClient First Name and Last Name: ");
-				clientName = Formatter.formatName(input.nextLine().trim());
+				clientName = Utils.formatName(input.nextLine().trim());
 				break;
 			}catch(InvalidNameException e) {
 				System.out.println(e.getMessage());
@@ -102,7 +103,7 @@ public abstract class RegistrationService {
 		while(true) {
 			System.out.print("\t\t\t\tClient CPF: ");
 			try {
-				clientCPF = Formatter.formatCPF(input.nextLine().trim());
+				clientCPF = Utils.formatCPF(input.nextLine().trim());
 				break;
 			}catch(InvalidCPFExcpetion e) {
 				System.out.println(e.getMessage());
@@ -111,7 +112,7 @@ public abstract class RegistrationService {
 		while(true) {
 			System.out.print("\t\t\t\tClient Phone Number: ");
 			try {
-				clientPhoneNumber = Formatter.formatPhoneNumber(input.nextLine().trim());
+				clientPhoneNumber = Utils.formatPhoneNumber(input.nextLine().trim());
 				break;
 			}catch(InvalidPhoneNumberException e) {
 				System.out.println(e.getMessage());
@@ -145,7 +146,7 @@ public abstract class RegistrationService {
 		System.out.println("\n\t\t\t\t"+UI.ANSI_GREEN+"Account Data"+UI.ANSI_RESET);
 		Set<Account> listAllAcc = new HashSet<>();
 		try {
-			listAllAcc = OtherService.loadAccountList(accsFile);
+			listAllAcc = Utils.loadAccountList(accsFile);
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}

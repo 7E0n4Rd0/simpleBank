@@ -11,6 +11,7 @@ import model.excpetion.InvalidDataException;
 import model.excpetion.InvalidNameException;
 import model.excpetion.InvalidOperationException;
 import model.excpetion.InvalidPhoneNumberException;
+import model.util.Utils;
 
 public abstract class ValidationService {
 	/**
@@ -19,11 +20,11 @@ public abstract class ValidationService {
 	 * @return password in string if is valid, else throw an exception.
 	 */
 	protected static String validatePassword(String passwordString){
-		if((passwordString.length() > 4 || passwordString.length() < 4) && !OtherService.isNumber(passwordString)) {
+		if((passwordString.length() > 4 || passwordString.length() < 4) && !Utils.isNumber(passwordString)) {
 			throw new IllegalArgumentException("\t\t\t\tError: " + UI.ANSI_RED + "The password must contain 4 digits only and caracters different from numbers are not allowed!" + UI.ANSI_RESET);
 		}if(passwordString.length() > 4 || passwordString.length() < 4) {
 			throw new IllegalArgumentException("\t\t\t\tError: " + UI.ANSI_RED + "The password must contain 4 digits only." + UI.ANSI_RESET);
-		}if(!OtherService.isNumber(passwordString)) {
+		}if(!Utils.isNumber(passwordString)) {
 			throw new NumberFormatException("\t\t\t\tError: " + UI.ANSI_RED + "Caracters different from numbers are not allowed!" + UI.ANSI_RESET);
 		}
 		return passwordString;
@@ -82,7 +83,7 @@ public abstract class ValidationService {
 		}else if(agency.getAgencyAddress().isBlank() || agency.getAgencyAddress().isEmpty()) {   
 			throw new InvalidDataException("Invalid Adress");
 		}
-		Set<Agency> agencys = OtherService.loadAgencyList(agencyFile);
+		Set<Agency> agencys = Utils.loadAgencyList(agencyFile);
 		for(Agency ag : agencys) {
 			if(ag.getAgencyCode().equals(agency.getAgencyCode()) || ag.getAgencyAddress().equals(agency.getAgencyAddress())) {
 				throw new InvalidOperationException("Cannot register an agency on the same address already!");
