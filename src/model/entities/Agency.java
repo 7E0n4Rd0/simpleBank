@@ -14,6 +14,8 @@ public class Agency {
 		this.agencyAddress = agencyAddress;
 	}
 
+	public Agency() {}
+
 	public String getAgencyAddress() {
 		return agencyAddress;
 	}
@@ -21,7 +23,11 @@ public class Agency {
 	public void setAgencyAddress(String agencyAddress) {
 		this.agencyAddress = agencyAddress;
 	}
-
+	
+	public void setAgencyCode(String agencyCode) {
+		this.agencyCode = agencyCode;
+	}
+	
 	public String getAgencyCode() {
 		return agencyCode;
 	}
@@ -57,7 +63,7 @@ public class Agency {
 
 	@Override
 	public String toString() {
-		return " Agency code: " + String.format("%03d", getAgencyCode()) + 
+		return " Agency code: " + getAgencyCode() + 
 				" Agency address: " + getAgencyAddress();
 	}
 	

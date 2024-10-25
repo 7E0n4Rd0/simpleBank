@@ -6,8 +6,8 @@ import model.entities.Agency;
 
 public interface AgencyDao {
 	void insert(Agency obj);
-	Agency update(Agency obj);
-	void deleteByCode(Integer code);
-	Agency findByCode(Integer code);
+	void update(Agency obj);
+	void deleteByCode(String code);
+	Agency findByCode(String code);
 	List<Agency> findAll();
 }

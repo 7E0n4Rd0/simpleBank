@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 /***
@@ -27,6 +29,21 @@ public class DB {
 		}
 	}
 	
+	public static void closePreparedStatement(PreparedStatement preparedStatement) {
+		try {
+			preparedStatement.close();
+		}catch(SQLException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+	
+	public static void closeResultSet(ResultSet resultSet) {
+		try {
+			resultSet.close();
+		}catch(SQLException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
 	
 	/***
 	 * Method responsible to get the connection to the simpleBank database.

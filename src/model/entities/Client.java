@@ -13,6 +13,8 @@ public class Client {
 		this.phoneNumberClient = phoneNumberClient;
 	}
 
+	public Client() {}
+	
 	public String getNameClient() {
 		return nameClient;
 	}

@@ -17,6 +17,8 @@ public class Account {
 		this.balance = 0.0;
 	}
 	
+	public Account() {}
+	
 	public String getAgencyCode() {
 		return agencyCode;
 	}
