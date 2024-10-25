@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
+import db.DB;
 import model.entities.Account;
 import model.entities.Agency;
 import model.excpetion.InvalidCPFExcpetion;
@@ -27,7 +28,12 @@ import model.util.Utils;
 public class Program {
 	
 	public static void main(String[] args) throws InvalidOperationException{
-		Locale.setDefault(Locale.ENGLISH);
+		
+		
+		DB.getConnection();
+		System.out.println("We got a connection!!!");
+		
+		/*Locale.setDefault(Locale.ENGLISH);
 		Scanner input = new Scanner(System.in);
 		File simpleBankDir = new File("C:/simpleBank/files");
 		if(!simpleBankDir.mkdirs() && !simpleBankDir.exists()) {
@@ -273,6 +279,6 @@ public class Program {
 			if(n.equals("4")) {
 				break;
 			}
-		}
+		}*/
 	}
 }

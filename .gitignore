@@ -29,3 +29,6 @@ replay_pid*
 .project
 .classpath
 /Files/*
+
+# Database
+db.properties

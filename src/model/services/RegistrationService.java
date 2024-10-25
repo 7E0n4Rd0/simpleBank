@@ -158,10 +158,10 @@ public abstract class RegistrationService {
 			}
 		}
 		while(true) {
-			numberAcc = String.format("%04d", random.nextInt(1, 9999));
+			numberAcc = String.format("%04d", random.nextInt(1, 99999999));
 			for(Account acc : agency.getAccountsList()) {
 				if(numberAcc.equals(acc.getNumberAccount())) {
-					numberAcc = String.format("%04d", random.nextInt(1, 9999));
+					numberAcc = String.format("%04d", random.nextInt(1, 99999999));
 				}
 			}
 			break;
