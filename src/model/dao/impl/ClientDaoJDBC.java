@@ -10,84 +10,88 @@ import java.util.List;
 import db.DB;
 import db.DBException;
 import db.DBIntegrityException;
-import model.dao.AgencyDao;
-import model.entities.Agency;
+import model.dao.ClientDao;
+import model.entities.Client;
 
-public class AgencyDaoJDBC implements AgencyDao{
-	
+public class ClientDaoJDBC implements ClientDao{
+
 	private Connection connection;
 	
-	public AgencyDaoJDBC(Connection connection) {
+	public ClientDaoJDBC(Connection connection) {
 		this.connection = connection;
 	}
 	
 	@Override
-	public void insert(Agency obj) {
+	public void insert(Client obj) {
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(
-					"INSERT INTO Agency(agencyCode, agencyAddress) "+
-					"VALUE (? , ?)");
-			preparedStatement.setString(1, obj.getAgencyCode());
-			preparedStatement.setString(2, obj.getAgencyAddress());
-			preparedStatement.executeUpdate();
-		}catch(SQLException e) {
-			throw new DBException(e.getMessage());
-		}finally {
-			DB.closePreparedStatement(preparedStatement);
-		}
-	}
-
-	@Override
-	public void update(Agency obj) {
-		PreparedStatement preparedStatement = null;
-		try {
-			preparedStatement = connection.prepareStatement(
-					"UPDATE Agency SET agencyAddress = ? "
-				  + "WHERE agencyCode = ?");
-			preparedStatement.setString(1, obj.getAgencyAddress());
-			preparedStatement.setString(2, obj.getAgencyCode());
+					"INSERT INTO Client(CPFClient, nameClient, phoneNumberClient) "
+					+ "VALUE (?, ?, ?)");
+			preparedStatement.setString(1, obj.getCpfClient());
+			preparedStatement.setString(2, obj.getNameClient());
+			preparedStatement.setString(3, obj.getPhoneNumberClient());
 			int rowsAffected = preparedStatement.executeUpdate();
 			if(rowsAffected == 0) {
-				throw new DBException("Couldn't update this Agency. Something went wrong!");
+				throw new DBException("Can't add the same Client already registered.");
 			}
 		}catch(SQLException e) {
 			throw new DBException(e.getMessage());
 		}finally {
 			DB.closePreparedStatement(preparedStatement);
 		}
+	}
+
+	@Override
+	public void update(Client obj) {
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(
+					"UPDATE Client SET nameClient = ?, phoneNumberClient = ? "
+					+ "WHERE CPFClient = ?");
+			preparedStatement.setString(1, obj.getNameClient());
+			preparedStatement.setString(2, obj.getPhoneNumberClient());
+			preparedStatement.setString(3, obj.getCpfClient());
+			int rowsAffected = preparedStatement.executeUpdate();
+			if(rowsAffected == 0) {
+				throw new DBException("Couldn't update Client, something went wrong.");
+			}
+		}catch(SQLException e) {
+			throw new DBException(e.getMessage());
+		}
 		
 	}
 
 	@Override
-	public void deleteByCode(String code) {
+	public void deleteByCPF(String cpf) {
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(
-					"DELETE FROM Agency WHERE agencyCode = ?");
-			preparedStatement.setString(1, code);
+					"DELETE FROM Client WHERE CPFClient = ?");
+			preparedStatement.setString(1, cpf);
 			int rowsAffected = preparedStatement.executeUpdate();
 			if(rowsAffected == 0) {
-				throw new DBException("Does not exists an Agency with the code \""+code+"\"");
+				throw new DBException("Client does not exists");
 			}
 		}catch(SQLException e) {
 			throw new DBIntegrityException(e.getMessage());
+		}finally {
+			DB.closePreparedStatement(preparedStatement);
 		}
-		
 	}
 
 	@Override
-	public Agency findByCode(String code) {
+	public Client findByCPF(String cpf) {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
 			preparedStatement = connection.prepareStatement(
-					"SELECT * FROM Agency WHERE agencyCode = ?");
-			preparedStatement.setString(1, String.valueOf(code));
+					"SELECT * FROM Client WHERE CPFClient = ?");
+			preparedStatement.setString(1, cpf);
 			resultSet = preparedStatement.executeQuery();
 			if(resultSet.next()) {
-				Agency agency = instantiateAgency(resultSet);
-				return agency;
+				Client client = instantiateClient(resultSet);
+				return client;
 			}
 			return null;
 		}catch(SQLException e) {
@@ -99,18 +103,18 @@ public class AgencyDaoJDBC implements AgencyDao{
 	}
 
 	@Override
-	public List<Agency> findAll() {
+	public List<Client> findAll() {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
 			preparedStatement = connection.prepareStatement(
-					"SELECT * FROM Agency");
+					"SELECT * FROM Client");
 			resultSet = preparedStatement.executeQuery();
-			List<Agency> list = new ArrayList<>();
+			List<Client> clients = new ArrayList<>();
 			while(resultSet.next()) {
-				list.add(instantiateAgency(resultSet));
+				clients.add(instantiateClient(resultSet));
 			}
-			return list;
+			return clients;
 		}catch(SQLException e) {
 			throw new DBException(e.getMessage());
 		}finally {
@@ -119,15 +123,16 @@ public class AgencyDaoJDBC implements AgencyDao{
 		}
 	}
 	
-	
-	private static Agency instantiateAgency(ResultSet resultSet) {
-		Agency agency = new Agency();
+	private static Client instantiateClient(ResultSet resultSet) {
+		Client client = new Client();
 		try {
-			agency.setAgencyCode(resultSet.getString("agencyCode"));
-			agency.setAgencyAddress(resultSet.getString("agencyAddress"));
+			client.setCpfClient(resultSet.getString("CPFClient"));
+			client.setNameClient(resultSet.getString("nameClient"));
+			client.setPhoneNumberClient(resultSet.getString("phoneNumberClient"));
 		}catch(SQLException e) {
 			throw new DBException(e.getMessage());
 		}
-		return agency;
+		return client;
 	}
+
 }

@@ -35,6 +35,10 @@ public class Client {
 		return cpfClient;
 	}
 
+	public void setCpfClient(String cpfClient) {
+		this.cpfClient = cpfClient;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(cpfClient);
