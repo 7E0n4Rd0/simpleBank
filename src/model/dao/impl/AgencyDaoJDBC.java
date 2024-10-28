@@ -12,6 +12,7 @@ import db.DBException;
 import db.DBIntegrityException;
 import model.dao.AgencyDao;
 import model.entities.Agency;
+import model.entities.Client;
 
 public class AgencyDaoJDBC implements AgencyDao{
 	
@@ -129,5 +130,17 @@ public class AgencyDaoJDBC implements AgencyDao{
 			throw new DBException(e.getMessage());
 		}
 		return agency;
+	}
+	
+	private static Client instantiateClient(ResultSet resultSet) {
+		Client client = new Client();
+		try {
+			client.setCpfClient(resultSet.getString("CPFClient"));
+			client.setNameClient(resultSet.getString("nameClient"));
+			client.setPhoneNumberClient(resultSet.getString("phoneNumberClient"));
+		}catch(SQLException e) {
+			throw new DBException(e.getMessage());
+		}
+		return client;
 	}
 }

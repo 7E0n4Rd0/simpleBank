@@ -1,6 +1,7 @@
 package model.dao;
 
 import db.DB;
+import model.dao.impl.AccountDaoJDBC;
 import model.dao.impl.AgencyDaoJDBC;
 import model.dao.impl.ClientDaoJDBC;
 
@@ -14,4 +15,7 @@ public class DaoFactory {
 		return new ClientDaoJDBC(DB.getConnection());
 	}
 	
+	public static AccountDao createAccount() {
+		return new AccountDaoJDBC(DB.getConnection());
+	}
 }

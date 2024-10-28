@@ -20,7 +20,6 @@ import model.excpetion.InvalidNameException;
 import model.excpetion.InvalidOperationException;
 import model.excpetion.InvalidPhoneNumberException;
 import model.util.Utils;
-import model.util.Utils;
 
 public abstract class RegistrationService {
 	static Scanner input = new Scanner(System.in);
@@ -145,14 +144,9 @@ public abstract class RegistrationService {
 
 		System.out.println("\n\t\t\t\t"+UI.ANSI_GREEN+"Account Data"+UI.ANSI_RESET);
 		Set<Account> listAllAcc = new HashSet<>();
-		try {
-			listAllAcc = Utils.loadAccountList(accsFile);
-		} catch (FileNotFoundException e) {
-			System.out.println(e.getMessage());
-		}
 		if(listAllAcc != null) {
 			for(Account acc : listAllAcc) {
-				if(acc.getAgencyCode().equals(agency.getAgencyCode()) && acc.getClient().getCpfClient().equals(client.getCpfClient())) {
+				if(acc.getAgency().getAgencyCode().equals(agency.getAgencyCode()) && acc.getClient().getCpfClient().equals(client.getCpfClient())) {
 					agency.addAccount(acc);
 				}
 			}
@@ -178,13 +172,13 @@ public abstract class RegistrationService {
 			}
 		}
 		
-		Account newAccount = new Account(agency.getAgencyCode(), numberAcc, password, client);
+		Account newAccount = new Account(numberAcc, password, agency, client);
 		if(agency.getAccountsList().contains(newAccount)) {
 			throw new InvalidDataException("This Account is already registered!!");
 		}
 		agency.addAccount(newAccount);
 		try (BufferedWriter br = new BufferedWriter(new FileWriter(accsFilePath, true))){
-			br.write(newAccount.getAgencyCode() + "," + newAccount.getNumberAccount() + "," 
+			br.write(newAccount.getAgency().getAgencyCode() + "," + newAccount.getNumberAccount() + "," 
 					+ newAccount.getPasswordAccount() + "," + newAccount.getBalance() + ","
 					+ newAccount.getClient().getCpfClient() + "," + newAccount.getClient().getNameClient() + ","
 					+ newAccount.getClient().getPhoneNumberClient());

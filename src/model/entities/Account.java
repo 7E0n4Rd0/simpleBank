@@ -3,14 +3,14 @@ package model.entities;
 import java.util.Objects;
 
 public class Account {
-	private String agencyCode;
 	private String numberAccount;
 	private String passwordAccount;
 	private Double balance;
 	private Client client;
+	private Agency agency;
 	
-	public Account(String agencyCode, String numberAccount, String passwordAccount, Client client) {
-		this.agencyCode = agencyCode;
+	public Account(String numberAccount, String passwordAccount, Agency agency, Client client) {
+		this.agency = agency;
 		this.numberAccount = numberAccount;
 		this.passwordAccount = passwordAccount;
 		this.client = client;
@@ -19,8 +19,28 @@ public class Account {
 	
 	public Account() {}
 	
-	public String getAgencyCode() {
-		return agencyCode;
+	public void setAgency(Agency agency) {
+		this.agency = agency;
+	}
+
+	public void setNumberAccount(String numberAccount) {
+		this.numberAccount = numberAccount;
+	}
+
+	public void setPasswordAccount(String passwordAccount) {
+		this.passwordAccount = passwordAccount;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	public Agency getAgency() {
+		return agency;
 	}
 	
 	public String getNumberAccount() {
@@ -59,7 +79,7 @@ public class Account {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Agency Code: " + getAgencyCode() + ", ");
+		sb.append("Agency Code: " + agency.getAgencyCode() + ", ");
 		sb.append("Number account: " + getNumberAccount() + ", ");
 		sb.append("password: " + getPasswordAccount() + ", ");
 		sb.append("Balance: " + String.format("%.2f",getBalance()) + ", ");

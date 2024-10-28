@@ -2,7 +2,6 @@ package model.services;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Set;
 
 import application.UI;
 import model.entities.Agency;
@@ -82,12 +81,6 @@ public abstract class ValidationService {
 			throw new IllegalArgumentException("You can't start a adress with numbers!!");
 		}else if(agency.getAgencyAddress().isBlank() || agency.getAgencyAddress().isEmpty()) {   
 			throw new InvalidDataException("Invalid Adress");
-		}
-		Set<Agency> agencys = Utils.loadAgencyList(agencyFile);
-		for(Agency ag : agencys) {
-			if(ag.getAgencyCode().equals(agency.getAgencyCode()) || ag.getAgencyAddress().equals(agency.getAgencyAddress())) {
-				throw new InvalidOperationException("Cannot register an agency on the same address already!");
-			}
 		}
 		return true;
 	}
